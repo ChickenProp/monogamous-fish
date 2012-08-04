@@ -1,6 +1,7 @@
 0
+"click to move a different fish
  ###
-##f#####
+##F#####
 #f     #
 ## # ###
  #m# #

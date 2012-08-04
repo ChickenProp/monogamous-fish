@@ -10,6 +10,7 @@ class Fish extends Entity {
 	public var level(getLevel, null):Level;
 	public var selected(getSelected, setSelected):Bool;
 	public var inLove:Bool;
+	public var loveCount:Int;
 
 	public function new (x:Float, y:Float, gender:Bool) {
 		super();
@@ -24,6 +25,7 @@ class Fish extends Entity {
 		this.gender = gender;
 		type = "tile";
 		inLove = false;
+		loveCount = 0;
 	}
 
 	public function move (dx:Int, dy:Int) {
@@ -42,6 +44,8 @@ class Fish extends Entity {
 	public function findLove () {
 		var e:Entity;
 		var d = 30;
+		inLove = false;
+		loveCount = 0;
 
 		e = collide("tile", x+d, y);
 		if (loves(e)) fallInLove();
@@ -55,11 +59,13 @@ class Fish extends Entity {
 
 	public function fallInLove () {
 		inLove = true;
-		selected = false;
+		if (level.allowedChanges == 0)
+			selected = false;
+		loveCount++;
 	}
 
 	override public function update () : Void {
-		if (Input.mousePressed && collidePoint(x, y, Input.mouseX, Input.mouseY) && !inLove) {
+		if (Input.mousePressed && collidePoint(x, y, Input.mouseX, Input.mouseY) && (!inLove || level.allowedChanges > 0)) {
 			selected = true;
 		}
 
@@ -72,7 +78,7 @@ class Fish extends Entity {
 			Draw.circlePlus(Std.int(x), Std.int(y), 14, 0xFFFFFF, 1, false, 2);
 		}
 		if (inLove)
-			Draw.circlePlus(Std.int(x), Std.int(y), 14, 0xFF0000, 1, false, 2);
+			Draw.circlePlus(Std.int(x), Std.int(y), 14, 0xFF0000, 0.5);
 	}
 
 	var _gender:Bool;

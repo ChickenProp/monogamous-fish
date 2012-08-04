@@ -1,0 +1,13 @@
+2
+"press space to change sex
+ ###
+ #f#
+ # ##
+##  #
+#fm #
+##  #
+#mf #
+##  #
+ # ##
+ #M#
+ ###
