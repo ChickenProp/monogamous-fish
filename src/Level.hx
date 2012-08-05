@@ -116,6 +116,8 @@ class Level extends World {
 			prevLevel();
 		if (Input.pressed(Key.R))
 			reset();
+		if (Input.pressed(Key.E))
+			HXP.world = new Editor();
 
 		if (checkWin())
 			nextLevel();
