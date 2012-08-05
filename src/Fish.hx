@@ -55,13 +55,13 @@ class Fish extends Entity {
 		inLove = false;
 		loveCount = 0;
 
-		e = collide("tile", x+d, y);
+		e = collide("tile", x+1, y);
 		if (loves(e)) fallInLove();
-		e = collide("tile", x-d, y);
+		e = collide("tile", x-1, y);
 		if (loves(e)) fallInLove();
-		e = collide("tile", x, y+d);
+		e = collide("tile", x, y+1);
 		if (loves(e)) fallInLove();
-		e = collide("tile", x, y-d);
+		e = collide("tile", x, y-1);
 		if (loves(e)) fallInLove();
 	}
 

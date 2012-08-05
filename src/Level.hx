@@ -94,13 +94,18 @@ class Level extends World {
 			- (Input.check(Key.LEFT) ? 1 : 0);
 		var dy = (Input.check(Key.DOWN) ? 1 : 0)
 			- (Input.check(Key.UP) ? 1 : 0);
+		if (dx != 0)
+			dy = 0;
 
 		if (readyToMove && selected != null) {
 			if (!selected.inLove && (dx != 0 || dy != 0))
 				doMove(Move(dx, dy));
-
-			if (Input.pressed(Key.SPACE) && allowedChanges != 0)
+			else if (Input.pressed(Key.SPACE) && allowedChanges !=0)
 				doMove(Swap);
+			else if (Input.check(Key.Z))
+				undo();
+			else if (Input.check(Key.Y))
+				redo();
 		}
 
 		super.update();
@@ -111,10 +116,6 @@ class Level extends World {
 			prevLevel();
 		if (Input.pressed(Key.R))
 			reset();
-		if (Input.pressed(Key.Z))
-			undo();
-		if (Input.pressed(Key.Y))
-			redo();
 
 		if (checkWin())
 			nextLevel();
