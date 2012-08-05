@@ -1,3 +1,4 @@
+import com.haxepunk.HXP;
 import com.haxepunk.Entity;
 import com.haxepunk.graphics.Image;
 import com.haxepunk.utils.Draw;
@@ -28,13 +29,20 @@ class Fish extends Entity {
 		loveCount = 0;
 	}
 
-	public function move (dx:Int, dy:Int) {
+	public function move (dx:Int, dy:Int) : Bool {
 		dx *= 30;
 		dy *= 30;
 		if (collide("tile", x + dx, y + dy) == null) {
-			x += dx;
-			y += dy;
+			level.readyToMove = false;
+			var complete = function () {
+				level.readyToMove = true;
+			};
+			HXP.tween(this, {x: x+dx, y: y+dy}, 6,
+			          { complete: complete });
+			return true;
 		}
+		else
+			return false;
 	}
 
 	public function loves (e:Entity) {

@@ -12,7 +12,7 @@ class Main extends Engine
 
 	public function new()
 	{
-		super(kScreenWidth, kScreenHeight, kFrameRate, false);
+		super(kScreenWidth, kScreenHeight, kFrameRate, true);
 	}
 
 	override public function init()

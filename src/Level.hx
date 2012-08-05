@@ -22,6 +22,7 @@ class Level extends World {
 	public var allowedChanges:Int;
 	public var changeCount:Text;
 	public var text:Text;
+	public var readyToMove:Bool;
 
 	public var moves:MoveList;
 	public var undoIndex:Int;
@@ -31,6 +32,7 @@ class Level extends World {
 
 		moves = [];
 		undoIndex = -1;
+		readyToMove = true;
 	}
 
 	public function load (n:Int) {
@@ -88,12 +90,12 @@ class Level extends World {
 	}
 
 	override public function update () {
-		var dx = (Input.pressed(Key.RIGHT) ? 1 : 0)
-			- (Input.pressed(Key.LEFT) ? 1 : 0);
-		var dy = (Input.pressed(Key.DOWN) ? 1 : 0)
-			- (Input.pressed(Key.UP) ? 1 : 0);
+		var dx = (Input.check(Key.RIGHT) ? 1 : 0)
+			- (Input.check(Key.LEFT) ? 1 : 0);
+		var dy = (Input.check(Key.DOWN) ? 1 : 0)
+			- (Input.check(Key.UP) ? 1 : 0);
 
-		if (selected != null) {
+		if (readyToMove && selected != null) {
 			if (!selected.inLove && (dx != 0 || dy != 0))
 				doMove(Move(dx, dy));
 
@@ -122,20 +124,22 @@ class Level extends World {
 	}
 
 	public function doMove (m:FishMove) : Void {
-		doFishMove(selected, m);
+		if (! doFishMove(selected, m))
+		        return;
 
 		moves.splice(undoIndex + 1, moves.length - undoIndex - 1);
 		moves.push({fish: selected, move: m});
 		undoIndex++;
 	}
 
-	public function doFishMove (f:Fish, m:FishMove) : Void {
+	public function doFishMove (f:Fish, m:FishMove) : Bool {
 		switch (m) {
 		case Swap:
 			f.gender = !f.gender;
 			allowedChanges--;
+			return true;
 		case Move(dx, dy):
-			selected.move(dx, dy);
+			return selected.move(dx, dy);
 		}
 	}
 
