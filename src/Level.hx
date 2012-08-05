@@ -27,6 +27,8 @@ class Level extends World {
 	public var moves:MoveList;
 	public var undoIndex:Int;
 
+	public var fishes:Array<Fish>;
+
 	public function new () {
 		super();
 
@@ -37,6 +39,7 @@ class Level extends World {
 
 	public function load (n:Int) {
 		levelNumber = n;
+		fishes = [];
 		var bytes = nme.Assets.getBytes(Std.format("levels/$n.txt"));
 
 		if (bytes == null) {
@@ -64,15 +67,23 @@ class Level extends World {
 			for (c in chars) {
 				switch (c) {
 				case '#': add(new Rock(x*30 + 15, y*30 + 15));
-				case 'm': add(new Fish(x*30 + 15, y*30 + 15, false));
-				case 'f': add(new Fish(x*30 + 15, y*30 + 15, true));
+				case 'm':
+					var f = new Fish(x*30 + 15, y*30 + 15, false);
+					fishes.push(f);
+					add(f);
+				case 'f':
+					var f = new Fish(x*30 + 15, y*30 + 15, true);
+					fishes.push(f);
+					add(f);
 				case 'M':
 					var f = new Fish(x*30 + 15, y*30 + 15, false);
 					selected = f;
+					fishes.push(f);
 					add(f);
 				case 'F':
 					var f = new Fish(x*30 + 15, y*30 + 15, true);
 					selected = f;
+					fishes.push(f);
 					add(f);
 				}
 				x++;
@@ -118,6 +129,12 @@ class Level extends World {
 			reset();
 		if (Input.pressed(Key.E))
 			HXP.world = new Editor();
+		if (Input.pressed(Key.TAB)) {
+			if (Input.check(Key.SHIFT))
+				selPrev();
+			else
+				selNext();
+		}
 
 		if (checkWin())
 			nextLevel();
@@ -153,6 +170,26 @@ class Level extends World {
 			allowedChanges++;
 		case Move(dx, dy):
 			selected.move(-dx, -dy);
+		}
+	}
+
+	public function selNext () : Void {
+		var l = fishes.length;
+		for (i in 0...l) {
+			if (fishes[i] == selected) {
+				selected = fishes[(i+1)%l];
+				return;
+			}
+		}
+	}
+
+	public function selPrev () : Void {
+		var l = fishes.length;
+		for (i in 0...l) {
+			if (fishes[i] == selected) {
+				selected = fishes[(i+l-1)%l];
+				return;
+			}
 		}
 	}
 

@@ -67,13 +67,11 @@ class Fish extends Entity {
 
 	public function fallInLove () {
 		inLove = true;
-		if (level.allowedChanges == 0)
-			selected = false;
 		loveCount++;
 	}
 
 	override public function update () : Void {
-		if (Input.mousePressed && collidePoint(x, y, Input.mouseX, Input.mouseY) && (!inLove || level.allowedChanges > 0)) {
+		if (Input.mousePressed && collidePoint(x, y, Input.mouseX, Input.mouseY)) {
 			selected = true;
 		}
 
