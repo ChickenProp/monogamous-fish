@@ -4,6 +4,18 @@ import com.haxepunk.utils.Input;
 import com.haxepunk.utils.Key;
 import com.haxepunk.graphics.Text;
 
+enum FishMove {
+	Swap;
+	Move(dx:Int, dy:Int);
+}
+
+typedef PlayerMove = {
+	var fish:Fish;
+	var move:FishMove;
+};
+
+typedef MoveList = Array<PlayerMove>;
+
 class Level extends World {
 	public var levelNumber:Int;
 	public var selected:Fish;
@@ -11,8 +23,14 @@ class Level extends World {
 	public var changeCount:Text;
 	public var text:Text;
 
+	public var moves:MoveList;
+	public var undoIndex:Int;
+
 	public function new () {
 		super();
+
+		moves = [];
+		undoIndex = -1;
 	}
 
 	public function load (n:Int) {
@@ -30,7 +48,7 @@ class Level extends World {
 		allowedChanges = Std.parseInt(lines.shift());
 		if (allowedChanges > 0) {
 			changeCount = new Text(Std.string(allowedChanges));
-			addGraphic(changeCount);
+			addGraphic(changeCount).layer--;
 		}
 
 		if (lines[0].charAt(0) == '"')
@@ -76,14 +94,11 @@ class Level extends World {
 			- (Input.pressed(Key.UP) ? 1 : 0);
 
 		if (selected != null) {
-			if (!selected.inLove)
-				selected.move(dx, dy);
+			if (!selected.inLove && (dx != 0 || dy != 0))
+				doMove(Move(dx, dy));
 
-			if (Input.pressed(Key.SPACE) && allowedChanges != 0) {
-				selected.gender = !selected.gender;
-				allowedChanges--;
-				changeCount.text = Std.string(allowedChanges);
-			}
+			if (Input.pressed(Key.SPACE) && allowedChanges != 0)
+				doMove(Swap);
 		}
 
 		super.update();
@@ -94,9 +109,44 @@ class Level extends World {
 			prevLevel();
 		if (Input.pressed(Key.R))
 			reset();
+		if (Input.pressed(Key.Z))
+			undo();
+		if (Input.pressed(Key.Y))
+			redo();
 
 		if (checkWin())
 			nextLevel();
+
+		if (changeCount != null)
+			changeCount.text = Std.string(allowedChanges);
+	}
+
+	public function doMove (m:FishMove) : Void {
+		doFishMove(selected, m);
+
+		moves.splice(undoIndex + 1, moves.length - undoIndex - 1);
+		moves.push({fish: selected, move: m});
+		undoIndex++;
+	}
+
+	public function doFishMove (f:Fish, m:FishMove) : Void {
+		switch (m) {
+		case Swap:
+			f.gender = !f.gender;
+			allowedChanges--;
+		case Move(dx, dy):
+			selected.move(dx, dy);
+		}
+	}
+
+	public function undoFishMove (f:Fish, m:FishMove) : Void {
+		switch (m) {
+		case Swap:
+			f.gender = !f.gender;
+			allowedChanges++;
+		case Move(dx, dy):
+			selected.move(-dx, -dy);
+		}
 	}
 
 	public function checkWin () : Bool {
@@ -107,6 +157,25 @@ class Level extends World {
 				return false;
 
 		return true;
+	}
+
+	public function undo () {
+		if (undoIndex == -1)
+			return;
+
+		selected = moves[undoIndex].fish;
+		undoFishMove(selected, moves[undoIndex].move);
+		undoIndex--;
+	}
+
+	public function redo () {
+		undoIndex++;
+		if (undoIndex < moves.length) {
+			selected = moves[undoIndex].fish;
+			doFishMove(selected, moves[undoIndex].move);
+		}
+		else
+			undoIndex--;
 	}
 
 	public function reset () {
@@ -125,5 +194,12 @@ class Level extends World {
 		text = new Text(s, 320, 460);
 		text.centerOO();
 		addGraphic(text).layer--;
+	}
+
+	public static function reverseFishMove (m:FishMove) : FishMove {
+		switch (m) {
+		case Swap: return Swap;
+		case Move(dx, dy): return Move(-dx, -dy);
+		}
 	}
 }
