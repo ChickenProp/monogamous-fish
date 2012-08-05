@@ -161,6 +161,9 @@ class Level extends World {
 			if (cast(f, Fish).loveCount != 1)
 				return false;
 
+		if (fish.length == 0) // no fish == final level, don't win
+			return false;
+
 		return true;
 	}
 
