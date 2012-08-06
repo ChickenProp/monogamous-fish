@@ -6,7 +6,7 @@ import com.haxepunk.utils.Key;
 import com.haxepunk.utils.Draw;
 import com.haxepunk.graphics.Text;
 
-class Editor extends World {
+class Editor extends MyWorld {
 	public var selX:Int;
 	public var selY:Int;
 
@@ -19,6 +19,8 @@ class Editor extends World {
 		}
 		selX = 305;
 		selY = 240;
+
+		addChangeCount();
 	}
 
 	override public function update () : Void {
@@ -47,6 +49,12 @@ class Editor extends World {
 			removeAtPoint(selX, selY);
 			add(new Fish(selX, selY, true));
 		}
+
+		var dc = (Input.pressed(187) ? 1 : 0) // plus (including equals)
+			- (Input.pressed(189) ? 1 : 0); // minus
+		allowedChanges += dc;
+		if (allowedChanges < 0)
+			allowedChanges = 0;
 	}
 
 	public function removeAtPoint(x:Int, y:Int) : Void {

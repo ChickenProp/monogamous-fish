@@ -18,19 +18,13 @@ typedef PlayerMove = {
 
 typedef MoveList = Array<PlayerMove>;
 
-class Level extends World {
+class Level extends MyWorld {
 	public var levelNumber:Int;
 	public var selected:Fish;
-	public var allowedChanges:Int;
-	public var changeCount:Text;
-	public var text:Text;
 	public var readyToMove:Bool;
 
 	public var moves:MoveList;
 	public var undoIndex:Int;
-
-	public var fishes:Array<Fish>;
-	public var heart:Spritemap;
 
 	public function new () {
 		super();
@@ -38,16 +32,10 @@ class Level extends World {
 		moves = [];
 		undoIndex = -1;
 		readyToMove = true;
-
-		heart = new Spritemap("gfx/heart.png", 14, 14);
-		heart.add("beat", [0, 1, 2, 3], 0.1, true);
-		heart.play("beat");
-		heart.centerOO();
 	}
 
 	public function load (n:Int) {
 		levelNumber = n;
-		fishes = [];
 		var bytes = nme.Assets.getBytes(Std.format("levels/$n.txt"));
 
 		if (bytes == null) {
@@ -59,10 +47,8 @@ class Level extends World {
 		var lines = src.split("\n");
 
 		allowedChanges = Std.parseInt(lines.shift());
-		if (allowedChanges > 0) {
-			changeCount = new Text(Std.string(allowedChanges));
-			addGraphic(changeCount).layer--;
-		}
+		if (allowedChanges > 0)
+			addChangeCount();
 
 		if (lines[0].charAt(0) == '"')
 			setText(lines.shift().substr(1));
@@ -77,21 +63,17 @@ class Level extends World {
 				case '#': add(new Rock(x*30 + 15, y*30 + 15));
 				case 'm':
 					var f = new Fish(x*30 + 15, y*30 + 15, false);
-					fishes.push(f);
 					add(f);
 				case 'f':
 					var f = new Fish(x*30 + 15, y*30 + 15, true);
-					fishes.push(f);
 					add(f);
 				case 'M':
 					var f = new Fish(x*30 + 15, y*30 + 15, false);
 					selected = f;
-					fishes.push(f);
 					add(f);
 				case 'F':
 					var f = new Fish(x*30 + 15, y*30 + 15, true);
 					selected = f;
-					fishes.push(f);
 					add(f);
 				}
 				x++;
@@ -128,7 +110,6 @@ class Level extends World {
 		}
 
 		super.update();
-		heart.update();
 
 		if (Input.pressed(Key.N))
 			nextLevel();
@@ -147,9 +128,6 @@ class Level extends World {
 
 		if (checkWin())
 			nextLevel();
-
-		if (changeCount != null)
-			changeCount.text = Std.string(allowedChanges);
 	}
 
 	public function doMove (m:FishMove) : Void {
@@ -182,21 +160,25 @@ class Level extends World {
 		}
 	}
 
+	// The order fishes() returns them in, next seems to work best with
+	// going to the previous index.
 	public function selNext () : Void {
-		var l = fishes.length;
+		var fs = fishes();
+		var l = fs.length;
 		for (i in 0...l) {
-			if (fishes[i] == selected) {
-				selected = fishes[(i+1)%l];
+			if (fs[i] == selected) {
+				selected = fs[(i+l-1)%l];
 				return;
 			}
 		}
 	}
 
 	public function selPrev () : Void {
-		var l = fishes.length;
+		var fs = fishes();
+		var l = fs.length;
 		for (i in 0...l) {
-			if (fishes[i] == selected) {
-				selected = fishes[(i+l-1)%l];
+			if (fs[i] == selected) {
+				selected = fs[(i-1)%l];
 				return;
 			}
 		}
@@ -257,19 +239,6 @@ class Level extends World {
 		switch (m) {
 		case Swap: return Swap;
 		case Move(dx, dy): return Move(-dx, -dy);
-		}
-	}
-
-	override public function render () : Void {
-		super.render();
-
-		for (f in fishes) {
-			var x:Int = Std.int(f.x);
-			var y:Int = Std.int(f.y);
-			if (f.loveDirections & Fish.RIGHT != 0)
-				Draw.graphic(heart, x+15, y);
-			if (f.loveDirections & Fish.DOWN != 0)
-				Draw.graphic(heart, x, y+16);
 		}
 	}
 }
