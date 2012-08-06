@@ -63,6 +63,34 @@ class MyWorld extends World {
 		}
 	}
 
+	public function tilesToStr () : String {
+		var lines:Array<String> = [];
+		var ents:Array<Entity> = [];
+		for (y in 0...height) {
+			var l = "";
+			for (x in 0...width)
+				l += ent2char(collidePoint("tile", x*30, y*30));
+			lines.push(l);
+		}
+		return lines.join("\n");
+	}
+
+	public function ent2char (e:Entity) : String {
+		if (e == null)
+			return " ";
+		else if (Std.is(e, Rock))
+			return "#";
+		else if (Std.is(e, Fish)) {
+			var f:Fish = cast e;
+			if (f.gender)
+				return "f";
+			else
+				return "m";
+		}
+		else
+			return "";
+	}
+
 	public function addTileByChar(x:Int, y:Int, c:String) {
 		switch (c) {
 		case '#': add(new Rock(x*30, y*30));

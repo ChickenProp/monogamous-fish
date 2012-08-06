@@ -1,5 +1,15 @@
 import com.haxepunk.Engine;
 import com.haxepunk.HXP;
+import com.haxepunk.HXP;
+import flash.ui.ContextMenu;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import com.haxepunk.utils.Input;
+import com.haxepunk.utils.Key;
+import com.haxepunk.utils.Data;
+import flash.system.System;
+import flash.desktop.Clipboard;
+import flash.desktop.ClipboardFormats;
 
 class Main extends Engine
 {
@@ -31,11 +41,29 @@ class Main extends Engine
 		HXP.screen.scale = 1;
 
 		HXP.world = Level.loadNew(1);
+
+		contextMenu = new ContextMenu();
+                contextMenu.clipboardMenu = true;
+                contextMenu.clipboardItems.copy = true;
+                contextMenu.clipboardItems.paste = true;
+                contextMenu.clipboardItems.clear = true;
+
+                addEventListener(Event.COPY, copyHandler);
+                addEventListener(Event.PASTE, pasteHandler);
+                addEventListener(Event.CLEAR, clearHandler);
 	}
 
 	public static function main()
 	{
 		new Main();
 	}
+
+	public static function copyHandler (e:Event) {
+		var level = cast(HXP.world, MyWorld);
+		System.setClipboard(level.tilesToStr());
+	}
+
+	public static function pasteHandler (e:Event) {}
+	public static function clearHandler (e:Event) {}
 
 }
