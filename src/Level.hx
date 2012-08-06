@@ -2,7 +2,9 @@ import com.haxepunk.HXP;
 import com.haxepunk.World;
 import com.haxepunk.utils.Input;
 import com.haxepunk.utils.Key;
+import com.haxepunk.utils.Draw;
 import com.haxepunk.graphics.Text;
+import com.haxepunk.graphics.Spritemap;
 
 enum FishMove {
 	Swap;
@@ -28,6 +30,7 @@ class Level extends World {
 	public var undoIndex:Int;
 
 	public var fishes:Array<Fish>;
+	public var heart:Spritemap;
 
 	public function new () {
 		super();
@@ -35,6 +38,11 @@ class Level extends World {
 		moves = [];
 		undoIndex = -1;
 		readyToMove = true;
+
+		heart = new Spritemap("gfx/heart.png", 14, 14);
+		heart.add("beat", [0, 1, 2, 3], 0.1, true);
+		heart.play("beat");
+		heart.centerOO();
 	}
 
 	public function load (n:Int) {
@@ -109,7 +117,7 @@ class Level extends World {
 			dy = 0;
 
 		if (readyToMove && selected != null) {
-			if (!selected.inLove && (dx != 0 || dy != 0))
+			if (selected.loveCount == 0 && (dx != 0 || dy != 0))
 				doMove(Move(dx, dy));
 			else if (Input.pressed(Key.SPACE) && allowedChanges !=0)
 				doMove(Swap);
@@ -120,6 +128,7 @@ class Level extends World {
 		}
 
 		super.update();
+		heart.update();
 
 		if (Input.pressed(Key.N))
 			nextLevel();
@@ -239,6 +248,7 @@ class Level extends World {
 
 	public function setText (s:String) {
 		text = new Text(s, 320, 460);
+		text.color = 0x000000;
 		text.centerOO();
 		addGraphic(text).layer--;
 	}
@@ -247,6 +257,19 @@ class Level extends World {
 		switch (m) {
 		case Swap: return Swap;
 		case Move(dx, dy): return Move(-dx, -dy);
+		}
+	}
+
+	override public function render () : Void {
+		super.render();
+
+		for (f in fishes) {
+			var x:Int = Std.int(f.x);
+			var y:Int = Std.int(f.y);
+			if (f.loveDirections & Fish.RIGHT != 0)
+				Draw.graphic(heart, x+15, y);
+			if (f.loveDirections & Fish.DOWN != 0)
+				Draw.graphic(heart, x, y+16);
 		}
 	}
 }

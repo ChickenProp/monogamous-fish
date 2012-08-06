@@ -7,7 +7,7 @@ class Rock extends Entity {
 
 		this.x = x;
 		this.y = y;
-		graphic = Image.createCircle(15, 0x844545);
+		graphic = Image.createCircle(15, 0x843e12);
 		cast(graphic, Image).centerOO();
 		width = 30;
 		height = 30;

@@ -5,12 +5,18 @@ import com.haxepunk.utils.Draw;
 import com.haxepunk.utils.Input;
 
 class Fish extends Entity {
+	public static var LEFT:Int = 1;
+	public static var RIGHT:Int = 2;
+	public static var UP:Int = 4;
+	public static var DOWN:Int = 8;
+
 	public static var blue:Int = 0x0000FF;
 	public static var pink:Int = 0xFF8080;
 	public var gender(getGender, setGender):Bool; // Male is false, female true.
+
 	public var level(getLevel, null):Level;
 	public var selected(getSelected, setSelected):Bool;
-	public var inLove:Bool;
+	public var loveDirections:Int;
 	public var loveCount:Int;
 
 	public function new (x:Float, y:Float, gender:Bool) {
@@ -25,7 +31,7 @@ class Fish extends Entity {
 		centerOrigin();
 		this.gender = gender;
 		type = "tile";
-		inLove = false;
+		loveDirections = 0;
 		loveCount = 0;
 	}
 
@@ -52,21 +58,21 @@ class Fish extends Entity {
 	public function findLove () {
 		var e:Entity;
 		var d = 30;
-		inLove = false;
+		loveDirections = 0;
 		loveCount = 0;
 
 		e = collide("tile", x+1, y);
-		if (loves(e)) fallInLove();
+		if (loves(e)) fallInLove(RIGHT);
 		e = collide("tile", x-1, y);
-		if (loves(e)) fallInLove();
+		if (loves(e)) fallInLove(LEFT);
 		e = collide("tile", x, y+1);
-		if (loves(e)) fallInLove();
+		if (loves(e)) fallInLove(DOWN);
 		e = collide("tile", x, y-1);
-		if (loves(e)) fallInLove();
+		if (loves(e)) fallInLove(UP);
 	}
 
-	public function fallInLove () {
-		inLove = true;
+	public function fallInLove (dir:Int) {
+		loveDirections |= dir;
 		loveCount++;
 	}
 
@@ -80,11 +86,14 @@ class Fish extends Entity {
 
 	override public function render () : Void {
 		super.render();
-		if (selected) {
-			Draw.circlePlus(Std.int(x), Std.int(y), 14, 0xFFFFFF, 1, false, 2);
+		var x = Std.int(x);
+		var y = Std.int(y);
+		if (loveCount != 0) {
+			Draw.circlePlus(x, y, 15, 0x000000, 0.3);
 		}
-		if (inLove)
-			Draw.circlePlus(Std.int(x), Std.int(y), 14, 0xFF0000, 0.5);
+		if (selected) {
+			Draw.circlePlus(x, y, 14, 0xFFFFFF, 1, false, 2);
+		}
 	}
 
 	var _gender:Bool;
