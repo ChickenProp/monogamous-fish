@@ -96,9 +96,9 @@ class MyWorld extends World {
 		else if (Std.is(e, Fish)) {
 			var f:Fish = cast e;
 			if (f.gender)
-				return "f";
+				return f.selected ? "F" : "f";
 			else
-				return "m";
+				return f.selected ? "M" : "m";
 		}
 		else
 			return "";
