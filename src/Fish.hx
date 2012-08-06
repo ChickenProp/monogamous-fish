@@ -104,9 +104,13 @@ class Fish extends Entity {
 		return g;
 	}
 
-	function getLevel () : Level { return cast(world, Level); }
+	function getLevel () : Level {
+		return Std.is(world, Level) ? cast world : null;
+	}
 
-	function getSelected () : Bool { return level.selected == this; }
+	function getSelected () : Bool {
+		return level != null && level.selected == this;
+	}
 	function setSelected (s:Bool) : Bool {
 		if (selected && !s)
 			level.selected = null;
