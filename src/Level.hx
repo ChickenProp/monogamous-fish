@@ -131,7 +131,7 @@ class Level extends MyWorld {
 	}
 
 	// The order fishes() returns them in, next seems to work best with
-	// going to the previous index.
+	// going to the previous index. Vice-versa for prev.
 	public function selNext () : Void {
 		var fs = fishes();
 		var l = fs.length;
@@ -148,7 +148,7 @@ class Level extends MyWorld {
 		var l = fs.length;
 		for (i in 0...l) {
 			if (fs[i] == selected) {
-				selected = fs[(i-1)%l];
+				selected = fs[(i+1)%l];
 				return;
 			}
 		}
