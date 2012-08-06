@@ -16,6 +16,9 @@ class MyWorld extends World {
 
 	public var heart:Spritemap;
 
+	public var width:Int;
+	public var height:Int;
+
 	public function new () {
 		super();
 
@@ -44,8 +47,8 @@ class MyWorld extends World {
 
 	public function loadTileString (str:String) : Void {
 		var lines = str.split("\n");
-		var width = 0;
-		var height = lines.length;
+		width = 0;
+		height = lines.length;
 		var y = 0;
 		for (l in lines) {
 			var x = 0;
@@ -62,15 +65,15 @@ class MyWorld extends World {
 
 	public function addTileByChar(x:Int, y:Int, c:String) {
 		switch (c) {
-		case '#': add(new Rock(x*30 + 15, y*30 + 15));
-		case 'm': add(new Fish(x*30 + 15, y*30 + 15, false));
-		case 'f': add(new Fish(x*30 + 15, y*30 + 15, true));
+		case '#': add(new Rock(x*30, y*30));
+		case 'm': add(new Fish(x*30, y*30, false));
+		case 'f': add(new Fish(x*30, y*30, true));
 		case 'M':
-			var f = new Fish(x*30 + 15, y*30 + 15, false);
+			var f = new Fish(x*30, y*30, false);
 			selected = f;
 			add(f);
 		case 'F':
-			var f = new Fish(x*30 + 15, y*30 + 15, true);
+			var f = new Fish(x*30, y*30, true);
 			selected = f;
 			add(f);
 		}
@@ -78,6 +81,8 @@ class MyWorld extends World {
 
 	public function addChangeCount () : Void {
 		changeCount = new Text(Std.string("      "));
+		changeCount.color = 0x000000;
+		changeCount.scrollX = changeCount.scrollY = 0;
 		addGraphic(changeCount).layer--;
 	}
 
@@ -85,7 +90,13 @@ class MyWorld extends World {
 		text = new Text(s, 320, 460);
 		text.color = 0x000000;
 		text.centerOO();
+		text.scrollX = text.scrollY = 0;
 		addGraphic(text).layer--;
+	}
+
+	public function adjustCamera () : Void {
+		HXP.camera.x = 15 * width - Main.halfWidth - 15;
+		HXP.camera.y = 15 * height - Main.halfHeight - 15;
 	}
 
 	override public function update () : Void {
@@ -106,6 +117,7 @@ class MyWorld extends World {
 	}
 
 	override public function render () : Void {
+		adjustCamera();
 		super.render();
 
 		for (f in fishes()) {

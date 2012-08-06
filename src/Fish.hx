@@ -77,7 +77,7 @@ class Fish extends Entity {
 	}
 
 	override public function update () : Void {
-		if (Input.mousePressed && collidePoint(x, y, Input.mouseX, Input.mouseY)) {
+		if (Input.mousePressed && collidePoint(x, y, world.mouseX, world.mouseY)) {
 			selected = true;
 		}
 

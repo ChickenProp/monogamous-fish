@@ -12,13 +12,15 @@ class Editor extends MyWorld {
 
 	public function new () {
 		super();
-		for (x in 0...18) {
-			for (y in 0...13) {
-				add(new Rock(30*x + 65, 30*y + 60));
+		width = 18;
+		height = 13;
+		for (x in 0...width) {
+			for (y in 0...height) {
+				add(new Rock(30*x, 30*y));
 			}
 		}
-		selX = 305;
-		selY = 240;
+		selX = 8;
+		selY = 6;
 
 		addChangeCount();
 	}
@@ -30,24 +32,24 @@ class Editor extends MyWorld {
 			- (Input.pressed(Key.LEFT) ? 1 : 0);
 		var dy = (Input.pressed(Key.DOWN) ? 1 : 0)
 			- (Input.pressed(Key.UP) ? 1 : 0);
-		selX += dx*30;
-		selY += dy*30;
-		selX = Std.int(HXP.clamp(selX, 65, 575));
-		selY = Std.int(HXP.clamp(selY, 60, 420));
+		selX += dx;
+		selY += dy;
+		selX = Std.int(HXP.clamp(selX, 0, width - 1));
+		selY = Std.int(HXP.clamp(selY, 0, height - 1));
 
 		if (Input.check(Key.SPACE))
-			removeAtPoint(selX, selY);
+			removeTile(selX, selY);
 		if (Input.check(Key.R)) {
-			removeAtPoint(selX, selY);
-			add(new Rock(selX, selY));
+			removeTile(selX, selY);
+			add(new Rock(selX*30, selY*30));
 		}
 		if (Input.check(Key.M)) {
-			removeAtPoint(selX, selY);
-			add(new Fish(selX, selY, false));
+			removeTile(selX, selY);
+			add(new Fish(selX*30, selY*30, false));
 		}
 		if (Input.check(Key.F)) {
-			removeAtPoint(selX, selY);
-			add(new Fish(selX, selY, true));
+			removeTile(selX, selY);
+			add(new Fish(selX*30, selY*30, true));
 		}
 
 		var dc = (Input.pressed(187) ? 1 : 0) // plus (including equals)
@@ -57,9 +59,9 @@ class Editor extends MyWorld {
 			allowedChanges = 0;
 	}
 
-	public function removeAtPoint(x:Int, y:Int) : Void {
+	public function removeTile(x:Int, y:Int) : Void {
 		var ents:Array<Entity> = [];
-		collidePointInto("tile", x, y, ents);
+		collidePointInto("tile", x*30, y*30, ents);
 		for (e in ents)
 			remove(e);
 	}
@@ -67,6 +69,6 @@ class Editor extends MyWorld {
 	override public function render () : Void {
 		super.render();
 
-		Draw.circlePlus(selX, selY, 14, 0xFFFFFF, 1, false, 2);
+		Draw.circlePlus(selX*30, selY*30, 14, 0xFFFFFF, 1, false, 2);
 	}
 }
