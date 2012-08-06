@@ -1,4 +1,5 @@
 2
+"N/P - next/prev level. Z/Y - undo/redo. R - reset.
   ###
   #f###
 ### fm#
