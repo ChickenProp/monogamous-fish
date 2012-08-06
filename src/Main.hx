@@ -60,10 +60,17 @@ class Main extends Engine
 
 	public static function copyHandler (e:Event) {
 		var level = cast(HXP.world, MyWorld);
-		System.setClipboard(level.tilesToStr());
+		System.setClipboard(level.worldToStr());
 	}
 
-	public static function pasteHandler (e:Event) {}
+	public static function pasteHandler (e:Event) {
+                var fmt = ClipboardFormats.TEXT_FORMAT;
+                var clip:String = Clipboard.generalClipboard.getData(fmt);
+
+		var lvl = new Level();
+		lvl.loadString(clip);
+		HXP.world = lvl;
+	}
 	public static function clearHandler (e:Event) {}
 
 }

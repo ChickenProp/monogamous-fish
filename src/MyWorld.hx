@@ -41,7 +41,10 @@ class MyWorld extends World {
 		ba.uncompress();
 		ba.readByte(); // version, currently ignored.
 		allowedChanges = ba.readByte();
-		var tiles = ba.toString();
+		if (allowedChanges > 0)
+			addChangeCount();
+
+		var tiles = ba.readUTF();
 		loadTileString(tiles);
 	}
 
@@ -66,6 +69,7 @@ class MyWorld extends World {
 	public function tilesToStr () : String {
 		var lines:Array<String> = [];
 		var ents:Array<Entity> = [];
+
 		for (y in 0...height) {
 			var l = "";
 			for (x in 0...width)
@@ -73,6 +77,15 @@ class MyWorld extends World {
 			lines.push(l);
 		}
 		return lines.join("\n");
+	}
+
+	public function worldToStr () : String {
+		var ba:ByteArray = new ByteArray();
+		ba.writeByte(0); //version
+		ba.writeByte(allowedChanges);
+		ba.writeUTF(tilesToStr());
+		ba.compress();
+		return Base64.encode(ba);
 	}
 
 	public function ent2char (e:Entity) : String {

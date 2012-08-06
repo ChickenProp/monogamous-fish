@@ -51,6 +51,9 @@ class Level extends MyWorld {
 		if (lines[0].charAt(0) == '"')
 			setText(lines.shift().substr(1));
 
+		if (lines[lines.length - 1] == "")
+			lines.pop();
+
 		loadTileString(lines.join("\n"));
 	}
 
