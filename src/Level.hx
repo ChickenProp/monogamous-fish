@@ -20,7 +20,6 @@ typedef MoveList = Array<PlayerMove>;
 
 class Level extends MyWorld {
 	public var levelNumber:Int;
-	public var selected:Fish;
 	public var readyToMove:Bool;
 
 	public var moves:MoveList;
@@ -43,7 +42,6 @@ class Level extends MyWorld {
 		}
 		var src = bytes.toString();
 
-		var y = 0;
 		var lines = src.split("\n");
 
 		allowedChanges = Std.parseInt(lines.shift());
@@ -53,35 +51,7 @@ class Level extends MyWorld {
 		if (lines[0].charAt(0) == '"')
 			setText(lines.shift().substr(1));
 
-		var width = 0;
-		var height = lines.length;
-		for (l in lines) {
-			var x = 0;
-			var chars = l.split("");
-			for (c in chars) {
-				switch (c) {
-				case '#': add(new Rock(x*30 + 15, y*30 + 15));
-				case 'm':
-					var f = new Fish(x*30 + 15, y*30 + 15, false);
-					add(f);
-				case 'f':
-					var f = new Fish(x*30 + 15, y*30 + 15, true);
-					add(f);
-				case 'M':
-					var f = new Fish(x*30 + 15, y*30 + 15, false);
-					selected = f;
-					add(f);
-				case 'F':
-					var f = new Fish(x*30 + 15, y*30 + 15, true);
-					selected = f;
-					add(f);
-				}
-				x++;
-			}
-			if (width < x)
-				width = x;
-			y++;
-		}
+		loadTileString(lines.join("\n"));
 	}
 
 	public static function loadNew (n:Int) {
@@ -226,13 +196,6 @@ class Level extends MyWorld {
 
 	public function prevLevel () {
 		HXP.world = loadNew(levelNumber-1);
-	}
-
-	public function setText (s:String) {
-		text = new Text(s, 320, 460);
-		text.color = 0x000000;
-		text.centerOO();
-		addGraphic(text).layer--;
 	}
 
 	public static function reverseFishMove (m:FishMove) : FishMove {
