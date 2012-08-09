@@ -1,6 +1,6 @@
 import com.haxepunk.HXP;
 import com.haxepunk.Entity;
-import com.haxepunk.graphics.Image;
+import com.haxepunk.graphics.Spritemap;
 import com.haxepunk.utils.Draw;
 import com.haxepunk.utils.Input;
 
@@ -10,9 +10,8 @@ class Fish extends Entity {
 	public static var UP:Int = 4;
 	public static var DOWN:Int = 8;
 
-	public static var blue:Int = 0x0000FF;
-	public static var pink:Int = 0xFF8080;
 	public var gender(getGender, setGender):Bool; // Male is false, female true.
+	public var image:Spritemap;
 
 	public var level(getLevel, null):Level;
 	public var selected(getSelected, setSelected):Bool;
@@ -24,18 +23,25 @@ class Fish extends Entity {
 
 		this.x = x;
 		this.y = y;
-		graphic = Image.createCircle(15, 0xFFFFFF);
-		cast(graphic, Image).centerOO();
+
+		image = new Spritemap("gfx/fish.png", 30, 30);
+		image.centerOO();
 		width = 30;
 		height = 30;
 		centerOrigin();
-		this.gender = gender;
+
+		graphic = image;
+		this.gender = gender; // Sets frame of graphic.
+
 		type = "tile";
 		loveDirections = 0;
 		loveCount = 0;
 	}
 
 	public function move (dx:Int, dy:Int) : Bool {
+		// Assumes a single unit in a cardinal direction.
+		image.angle = -dx * 90 + (dy > 0 ? 180 : 0);
+
 		dx *= 30;
 		dy *= 30;
 		if (collide("tile", x + dx, y + dy) == null) {
@@ -88,9 +94,6 @@ class Fish extends Entity {
 		super.render();
 		var x = Std.int(x);
 		var y = Std.int(y);
-		if (loveCount != 0) {
-			Draw.circlePlus(x, y, 15, 0x000000, 0.3);
-		}
 		if (selected) {
 			Draw.circlePlus(x, y, 14, 0xFFFFFF, 1, false, 2);
 		}
@@ -99,7 +102,7 @@ class Fish extends Entity {
 	var _gender:Bool;
 	function getGender () : Bool { return _gender; }
 	function setGender (g:Bool) : Bool {
-		cast(graphic, Image).color = g ? pink : blue;
+		image.setFrame(g ? 1 : 0, 0);
 		_gender = g;
 		return g;
 	}
