@@ -3,6 +3,7 @@ import com.haxepunk.Entity;
 import com.haxepunk.graphics.Spritemap;
 import com.haxepunk.utils.Draw;
 import com.haxepunk.utils.Input;
+using Lambda;
 
 class Fish extends Entity {
 	public static var LEFT:Int = 1;
@@ -11,6 +12,7 @@ class Fish extends Entity {
 	public static var DOWN:Int = 8;
 
 	public var gender(getGender, setGender):Bool; // Male is false, female true.
+	public var facing(getFacing, setFacing):Int;
 	public var image:Spritemap;
 
 	public var level(getLevel, null):Level;
@@ -39,8 +41,7 @@ class Fish extends Entity {
 	}
 
 	public function move (dx:Int, dy:Int) : Bool {
-		// Assumes a single unit in a cardinal direction.
-		image.angle = -dx * 90 + (dy > 0 ? 180 : 0);
+		facing = xy2dir(dx, dy);
 
 		dx *= 30;
 		dy *= 30;
@@ -62,24 +63,37 @@ class Fish extends Entity {
 	}
 
 	public function findLove () {
-		var e:Entity;
-		var d = 30;
-		loveDirections = 0;
-		loveCount = 0;
+		var newld = 0;
+		var newlc = 0;
+		var newdir = 0;
 
-		e = collide("tile", x+1, y);
-		if (loves(e)) fallInLove(RIGHT);
-		e = collide("tile", x-1, y);
-		if (loves(e)) fallInLove(LEFT);
-		e = collide("tile", x, y+1);
-		if (loves(e)) fallInLove(DOWN);
-		e = collide("tile", x, y-1);
-		if (loves(e)) fallInLove(UP);
+		var check = function (dir:Int) : Void {
+			var e = collide("tile", x + dir2x(dir), y + dir2y(dir));
+			if (loves(e)) {
+				newld |= dir;
+				newlc++;
+				newdir = dir;
+			}
+		}
+
+		check(UP);
+		check(DOWN);
+		check(LEFT);
+		check(RIGHT);
+
+		if (newld != loveDirections) {
+			loveDirections = newld;
+			if (loveCount == 0)
+				facing = newdir;
+			loveCount = newlc;
+		}
 	}
 
-	public function fallInLove (dir:Int) {
-		loveDirections |= dir;
-		loveCount++;
+	public function cycleLove () : Void {
+		var dirs = [UP, LEFT, DOWN, RIGHT].filter(function (d) {
+		                return loveDirections & d != 0;
+		        }).array();
+		facing = dirs[(dirs.indexOf(facing) + 1) % dirs.length];
 	}
 
 	override public function update () : Void {
@@ -88,6 +102,8 @@ class Fish extends Entity {
 		}
 
 		findLove();
+		if (loveCount != 0 && level.frame % 15 == 0)
+			cycleLove();
 	}
 
 	override public function render () : Void {
@@ -97,6 +113,27 @@ class Fish extends Entity {
 		if (selected) {
 			Draw.circlePlus(x, y, 14, 0xFFFFFF, 1, false, 2);
 		}
+	}
+
+	public static function dir2x (dir:Int) : Int {
+		return (switch (dir) {
+		        case LEFT: -1;
+		        case RIGHT: 1;
+		        default: 0;
+		});
+	}
+
+	public static function dir2y (dir:Int) : Int {
+		return (switch (dir) {
+		        case UP: -1;
+		        case DOWN: 1;
+		        default: 0;
+		});
+	}
+
+	public static function xy2dir (x:Int, y:Int) : Int {
+		return (x > 0 ? RIGHT : 0) + (x < 0 ? LEFT : 0)
+			+ (y < 0 ? UP : 0) + (y > 0 ? DOWN : 0);
 	}
 
 	var _gender:Bool;
@@ -121,5 +158,20 @@ class Fish extends Entity {
 			level.selected = this;
 
 		return s;
+	}
+
+	public var _facing:Int;
+	function getFacing () : Int { return _facing; }
+	function setFacing (f:Int) : Int {
+		image.angle = (switch (f) {
+		        case LEFT: 90;
+		        case RIGHT: -90;
+		        case UP: 0;
+		        case DOWN: 180;
+		        default: 0;
+		});
+
+		_facing = f;
+		return f;
 	}
 }

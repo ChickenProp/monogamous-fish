@@ -19,6 +19,8 @@ class MyWorld extends World {
 	public var width:Int;
 	public var height:Int;
 
+	public var frame:Int;
+
 	public function new () {
 		super();
 
@@ -28,6 +30,7 @@ class MyWorld extends World {
 		heart.centerOO();
 
 		allowedChanges = 0;
+		frame = 0;
 	}
 
 	public function loadString (str:String) : Void {
@@ -146,6 +149,8 @@ class MyWorld extends World {
 
 		if (changeCount != null)
 			changeCount.text = Std.string(allowedChanges);
+
+		frame++;
 	}
 
 	public function fishes() : Array<Fish> {
