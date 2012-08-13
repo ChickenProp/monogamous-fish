@@ -5,6 +5,7 @@ import com.haxepunk.utils.Input;
 import com.haxepunk.utils.Key;
 import com.haxepunk.utils.Draw;
 import com.haxepunk.graphics.Text;
+import com.haxepunk.graphics.Spritemap;
 
 class Editor extends MyWorld {
 	public var selX:Int;
@@ -23,6 +24,8 @@ class Editor extends MyWorld {
 		selY = 6;
 
 		addChangeCount();
+
+		add(new Panel());
 	}
 
 	override public function update () : Void {

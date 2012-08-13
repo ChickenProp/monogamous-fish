@@ -26,7 +26,7 @@ class Fish extends Entity {
 		this.x = x;
 		this.y = y;
 
-		image = new Spritemap("gfx/fish.png", 30, 30);
+		image = new Spritemap("gfx/tiles.png", 30, 30);
 		image.centerOO();
 		width = 30;
 		height = 30;
@@ -139,7 +139,7 @@ class Fish extends Entity {
 	var _gender:Bool;
 	function getGender () : Bool { return _gender; }
 	function setGender (g:Bool) : Bool {
-		image.setFrame(g ? 1 : 0, 0);
+		image.frame = g ? 3 : 2;
 		_gender = g;
 		return g;
 	}
