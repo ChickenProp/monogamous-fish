@@ -15,7 +15,7 @@ class Fish extends Entity {
 	public var facing(getFacing, setFacing):Int;
 	public var image:Spritemap;
 
-	public var level(getLevel, null):Level;
+	public var level(getLevel, null):MyWorld;
 	public var selected(getSelected, setSelected):Bool;
 	public var loveDirections:Int;
 	public var loveCount:Int;
@@ -144,8 +144,8 @@ class Fish extends Entity {
 		return g;
 	}
 
-	function getLevel () : Level {
-		return Std.is(world, Level) ? cast world : null;
+	function getLevel () : MyWorld {
+		return cast world;
 	}
 
 	function getSelected () : Bool {

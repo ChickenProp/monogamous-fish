@@ -21,6 +21,8 @@ class MyWorld extends World {
 
 	public var frame:Int;
 
+	public var readyToMove:Bool;
+
 	public function new () {
 		super();
 

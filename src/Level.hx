@@ -20,7 +20,6 @@ typedef MoveList = Array<PlayerMove>;
 
 class Level extends MyWorld {
 	public var levelNumber:Int;
-	public var readyToMove:Bool;
 
 	public var moves:MoveList;
 	public var undoIndex:Int;
