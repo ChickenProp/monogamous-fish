@@ -3,6 +3,7 @@ import com.haxepunk.graphics.Graphiclist;
 import com.haxepunk.graphics.Image;
 import com.haxepunk.graphics.Spritemap;
 import com.haxepunk.utils.Input;
+import com.haxepunk.utils.Draw;
 
 typedef Button = {
 	var ent:Entity;
@@ -13,6 +14,7 @@ class Panel extends Entity {
 	public var buttons:Array<Button>;
 	public var editor:Editor;
 	public var selectedButton:Button;
+	public var buttonHilight:Image;
 
 	public function new () {
 		super();
@@ -24,7 +26,14 @@ class Panel extends Entity {
 		border.x = border.y = -2;
 		gl.add(border);
 		gl.add(Image.createRect(30, 120, Main.kClearColor));
+
+		buttonHilight = Image.createRect(30, 30, 0xFFFFFF);
+		buttonHilight.relative = false;
+		buttonHilight.alpha = 0.5;
+		gl.add(buttonHilight);
+
 		graphic = gl;
+		layer++; // render hilight under the buttons.
 
 		x = Main.kScreenWidth - 30;
 		y = Main.halfHeight-60;
@@ -96,5 +105,12 @@ class Panel extends Entity {
 					selectButton(b);
 			}
 		}
+	}
+
+	override public function render () : Void {
+		buttonHilight.x = selectedButton.ent.x;
+		buttonHilight.y = selectedButton.ent.y;
+
+		super.render();
 	}
 }
