@@ -80,4 +80,16 @@ class Editor extends MyWorld {
 	public function pointToTile (p:Float) : Int {
 		return Math.floor((p+15)/30);
 	}
+
+	override public function tilesToStr () : String {
+		var lines:Array<String> = [];
+
+		for (y in 0...height) {
+			var l = "";
+			for (x in 0...width)
+				l += ent2char(tiles[x][y]);
+			lines.push(l);
+		}
+		return lines.join("\n");
+	}
 }
