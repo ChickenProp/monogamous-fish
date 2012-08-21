@@ -84,9 +84,6 @@ class Panel extends Entity {
 			world.remove(editor.entToPlace);
 
 		editor.entToPlace = createEntity(b.type);
-
-		if (editor.entToPlace != null)
-			world.add(editor.entToPlace);
 	}
 
 	override public function update () : Void {

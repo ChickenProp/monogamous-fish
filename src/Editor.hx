@@ -54,6 +54,7 @@ class Editor extends MyWorld {
 				remove(hiddenTile);
 
 			if (entToPlace != null) {
+				add(entToPlace);
 				entToPlace.x = tx*30;
 				entToPlace.y = ty*30;
 			}
@@ -63,8 +64,11 @@ class Editor extends MyWorld {
 				hiddenTile = null;
 			}
 		}
-		else
+		else {
+			if (entToPlace != null)
+				remove(entToPlace);
 			hiddenTile = null;
+		}
 	}
 
 	public function swapTile (x:Int, y:Int, e:Entity) : Void {
