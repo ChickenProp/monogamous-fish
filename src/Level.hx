@@ -53,7 +53,47 @@ class Level extends MyWorld {
 		if (lines[lines.length - 1] == "")
 			lines.pop();
 
-		loadTileString(lines.join("\n"));
+		loadTileString(trimTileString(lines.join("\n")));
+	}
+
+	public function trimTileString (str:String) : String {
+		var lines = str.split("\n");
+		var keep:Array<Array<Bool>> = [];
+
+		for (y in 0...lines.length) {
+			keep.push([]);
+			for (x in 0...lines[y].length)
+				keep[y].push(false);
+		}
+
+		for (y in 0...lines.length) {
+			for (x in 0...lines[y].length) {
+				if (lines[y].charAt(x) == '#')
+					continue;
+
+				for (yy in y-1 ... y+2) {
+					if (yy < 0 || yy >= lines.length)
+						continue;
+					for (xx in x-1 ... x+2) {
+						if (xx < 0 || xx >= lines[yy].length)
+							continue;
+						keep[yy][xx] = true;
+					}
+				}
+			}
+		}
+
+		for (y in 0...lines.length) {
+			for (x in 0...lines[y].length) {
+				if (!keep[y][x]) {
+					var chars = lines[y].split("");
+					chars[x] = " ";
+					lines[y] = chars.join("");
+				}
+			}
+		}
+
+		return lines.join("\n");
 	}
 
 	public static function loadNew (n:Int) {
