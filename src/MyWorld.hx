@@ -150,19 +150,22 @@ class MyWorld extends World {
 	}
 
 	public function addTileByChar(x:Int, y:Int, c:String) {
-		switch (c) {
-		case '#': add(new Rock(x*30, y*30));
-		case 'm': add(new Fish(x*30, y*30, false));
-		case 'f': add(new Fish(x*30, y*30, true));
-		case 'M':
-			var f = new Fish(x*30, y*30, false);
-			selected = f;
-			add(f);
-		case 'F':
-			var f = new Fish(x*30, y*30, true);
-			selected = f;
-			add(f);
-		}
+		var e:Entity = (switch (c.toLowerCase()) {
+		        case '#': cast(new Rock(x*30, y*30));
+		        case 'm': cast(new Fish(x*30, y*30, false));
+		        case 'f': cast(new Fish(x*30, y*30, true));
+		        default: null;
+		});
+
+		if (e == null)
+			return;
+
+		add(e);
+
+		// Select the first fish we add, to ensure there's always a fish
+		// selected.
+		if (~/[FM]/.match(c) || (~/[fm]/.match(c) && selected == null))
+			selected = cast e;
 	}
 
 	public function addChangeCount () : Void {
