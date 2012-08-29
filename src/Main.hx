@@ -40,7 +40,7 @@ class Main extends Engine
 		HXP.screen.color = kClearColor;
 		HXP.screen.scale = 1;
 
-		HXP.world = Level.loadNew(1);
+		HXP.world = Level.loadNew(0);
 
 		contextMenu = new ContextMenu();
                 contextMenu.clipboardMenu = true;
