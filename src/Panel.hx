@@ -18,14 +18,31 @@ class Panel extends Entity {
 
 	public function new () {
 		super();
+		buttons = [];
+	}
 
+	override public function added () : Void {
+		editor = cast world;
+		addButton(0, "empty");
+		addButton(1, "rock");
+		addButton(2, "male");
+		addButton(3, "female");
+		addButton(4, "empty");
+		selectButton(buttons[0]);
+
+		setupImage();
+	}
+
+	public function setupImage () : Void {
 		var gl = new Graphiclist();
 		gl.scrollX = gl.scrollY = 0;
 
-		var border = Image.createRect(34, 124, 0x000000);
+		var numbuttons = buttons.length;
+
+		var border = Image.createRect(34, numbuttons*30 + 4, 0x000000);
 		border.x = border.y = -2;
 		gl.add(border);
-		gl.add(Image.createRect(30, 120, Main.kClearColor));
+		gl.add(Image.createRect(30, numbuttons*30, Main.kClearColor));
 
 		buttonHilight = Image.createRect(30, 30, 0xFFFFFF);
 		buttonHilight.relative = false;
@@ -36,25 +53,17 @@ class Panel extends Entity {
 		layer++; // render hilight under the buttons.
 
 		x = Main.kScreenWidth - 30;
-		y = Main.halfHeight-60;
+		y = Main.halfHeight - numbuttons*15;
 
-		buttons = [];
-	}
-
-	override public function added () : Void {
-		editor = cast world;
-		addButton(0, "empty");
-		addButton(1, "rock");
-		addButton(2, "male");
-		addButton(3, "female");
-		selectButton(buttons[0]);
+		for (i in 0...numbuttons) {
+			buttons[i].ent.x = x;
+			buttons[i].ent.y = y + 30*i;
+		}
 	}
 
 	public function addButton(frame:Int, type:String) : Void {
 		var i = 0;
 		var b = new Entity();
-		b.x = x;
-		b.y = y + 30*buttons.length;
 		b.width = b.height = 30;
 
 		var s = new Spritemap("gfx/tiles.png", 30, 30);
