@@ -97,7 +97,14 @@ class Fish extends Entity {
 	}
 
 	override public function update () : Void {
-		if (Input.mousePressed && collidePoint(x, y, world.mouseX, world.mouseY)) {
+		// Don't select on click if we're in the editor, because then
+		// we'd just select the entity that's being dragged under the
+		// mouse. Instead, the Selector entity handles selection in the
+		// editor.
+		if (Input.mousePressed
+		    && collidePoint(x, y, world.mouseX, world.mouseY)
+		    && Std.is(world, Level))
+		{
 			selected = true;
 		}
 

@@ -8,6 +8,7 @@ import com.haxepunk.utils.Draw;
 typedef Button = {
 	var ent:Entity;
 	var type:String;
+	var replace:Bool;
 };
 
 class Panel extends Entity {
@@ -27,7 +28,8 @@ class Panel extends Entity {
 		addButton(1, "rock");
 		addButton(2, "male");
 		addButton(3, "female");
-		addButton(4, "empty");
+		addButton(4, "select");
+		buttons[4].replace = false;
 		selectButton(buttons[0]);
 
 		setupImage();
@@ -72,7 +74,7 @@ class Panel extends Entity {
 		b.graphic = s;
 		b.layer--;
 
-		buttons.push({ ent: b, type: type});
+		buttons.push({ ent: b, type: type, replace: true});
 		world.add(b);
 	}
 
@@ -81,6 +83,7 @@ class Panel extends Entity {
 		case "male": return new Fish(0, 0, false);
 		case "female": return new Fish(0, 0, true);
 		case "rock": return new Rock(0, 0);
+		case "select": return new Selector(0, 0);
 		default: return null;
 		}
 	}

@@ -48,9 +48,11 @@ class Editor extends MyWorld {
 		if (hiddenTile != null)
 			add(hiddenTile);
 
+		var replace = panel.selectedButton.replace;
+
 		if (0 <= tx && tx < width && 0 <= ty && ty < height) {
 			hiddenTile = tiles[tx][ty];
-			if (hiddenTile != null)
+			if (hiddenTile != null && replace)
 				remove(hiddenTile);
 
 			if (entToPlace != null) {
@@ -59,7 +61,7 @@ class Editor extends MyWorld {
 				entToPlace.y = ty*30;
 			}
 
-			if (Input.mouseDown) {
+			if (Input.mouseDown && replace) {
 				swapTile(tx, ty, panel.addSelectedEntity(tx*30, ty*30));
 				hiddenTile = null;
 			}
