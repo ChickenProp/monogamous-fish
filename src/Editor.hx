@@ -71,6 +71,12 @@ class Editor extends MyWorld {
 				remove(entToPlace);
 			hiddenTile = null;
 		}
+
+		if (Input.pressed(Key.E)) {
+			var lvl = new Level();
+			lvl.loadString(worldToStr());
+			HXP.world = lvl;
+		}
 	}
 
 	public function swapTile (x:Int, y:Int, e:Entity) : Void {
