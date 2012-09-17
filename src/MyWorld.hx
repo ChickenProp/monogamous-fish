@@ -2,6 +2,8 @@ import com.haxepunk.HXP;
 import com.haxepunk.World;
 import com.haxepunk.Entity;
 import com.haxepunk.utils.Draw;
+import com.haxepunk.utils.Input;
+import com.haxepunk.utils.Key;
 import com.haxepunk.graphics.Text;
 import com.haxepunk.graphics.Spritemap;
 import nme.utils.ByteArray;
@@ -172,7 +174,15 @@ class MyWorld extends World {
 		changeCount = new Text(Std.string("      "));
 		changeCount.color = 0x000000;
 		changeCount.scrollX = changeCount.scrollY = 0;
+		changeCount.x = 30;
+		changeCount.y = Main.kScreenHeight - 30;
 		addGraphic(changeCount).layer--;
+
+		var swapFish = new Spritemap("gfx/tiles.png", 30, 30);
+		swapFish.frame = 8;
+		swapFish.scrollX = 0; swapFish.scrollY = 0;
+		swapFish.y = Main.kScreenHeight - 35;
+		addGraphic(swapFish).layer--;
 	}
 
 	public function setText (s:String) {
@@ -194,6 +204,9 @@ class MyWorld extends World {
 
 		if (changeCount != null)
 			changeCount.text = Std.string(allowedChanges);
+
+		if (Input.pressed(Key.F5))
+			HXP.console.enable();
 
 		frame++;
 	}
