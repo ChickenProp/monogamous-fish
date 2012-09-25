@@ -30,6 +30,14 @@ class Level extends MyWorld {
 		moves = [];
 		undoIndex = -1;
 		readyToMove = true;
+
+		var self = this;
+		add(new UIButton(20, 20, UIButton.UNDO, "undo", null,
+		                 function () { self.undo(); }));
+		add(new UIButton(40, 20, UIButton.REDO, "redo", null,
+		                 function () { self.redo(); }));
+		add(new UIButton(60, 20, UIButton.RESTART, "restart", null,
+		                 function () { self.reset(); }));
 	}
 
 	public function load (n:Int) {
