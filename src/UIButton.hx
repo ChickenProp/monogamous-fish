@@ -31,12 +31,19 @@ class UIButton extends Entity {
 	}
 
 	override public function update () {
+		cast(graphic,Spritemap).color = enabled() ? 0x000000 : 0x808080;
+
 		if (Input.mousePressed
 		    && collidePoint(x, y, Input.mouseX, Input.mouseY)
-		    && clickFn != null)
+		    && clickFn != null
+		    && enabled())
 		{
 			clickFn();
 		}
+	}
+
+	public function enabled () : Bool {
+		return enableFn == null || enableFn();
 	}
 }
 

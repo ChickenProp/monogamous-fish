@@ -32,11 +32,14 @@ class Level extends MyWorld {
 		readyToMove = true;
 
 		var self = this;
-		add(new UIButton(20, 20, UIButton.UNDO, "undo", null,
+		add(new UIButton(20, 20, UIButton.UNDO, "undo",
+		                 function () { return self.canUndo(); },
 		                 function () { self.undo(); }));
-		add(new UIButton(40, 20, UIButton.REDO, "redo", null,
+		add(new UIButton(40, 20, UIButton.REDO, "redo",
+		                 function () { return self.canRedo(); },
 		                 function () { self.redo(); }));
-		add(new UIButton(60, 20, UIButton.RESTART, "restart", null,
+		add(new UIButton(60, 20, UIButton.RESTART, "restart",
+		                 function () { return self.canUndo(); },
 		                 function () { self.reset(); }));
 	}
 
@@ -165,8 +168,12 @@ class Level extends MyWorld {
 		return true;
 	}
 
+	public function canUndo () : Bool {
+		return undoIndex != -1;
+	}
+
 	public function undo () {
-		if (undoIndex == -1)
+		if (! canUndo())
 			return;
 
 		selected = moves[undoIndex].fish;
@@ -174,14 +181,17 @@ class Level extends MyWorld {
 		undoIndex--;
 	}
 
+	public function canRedo () : Bool {
+		return undoIndex < moves.length - 1;
+	}
+
 	public function redo () {
+		if (! canRedo())
+			return;
+
 		undoIndex++;
-		if (undoIndex < moves.length) {
-			selected = moves[undoIndex].fish;
-			doFishMove(selected, moves[undoIndex].move);
-		}
-		else
-			undoIndex--;
+		selected = moves[undoIndex].fish;
+		doFishMove(selected, moves[undoIndex].move);
 	}
 
 	public function reset () {
