@@ -31,13 +31,6 @@ class Level extends MyWorld {
 		moves = [];
 		undoIndex = -1;
 		readyToMove = true;
-
-		add(new UIButton(20, 20, UIButton.UNDO, "undo (Z)",
-		                 this.canUndo, this.undo));
-		add(new UIButton(40, 20, UIButton.REDO, "redo (Y)",
-		                 this.canRedo, this.redo));
-		add(new UIButton(60, 20, UIButton.RESTART, "restart (R)",
-		                 this.canUndo, this.reset));
 	}
 
 	public function load (n:Int) {
@@ -50,6 +43,9 @@ class Level extends MyWorld {
 		levelNumber = n;
 
 		loadString(levels[n]);
+
+		if (numFish != 0)
+			addUI();
 	}
 
 	public static function loadNew (n:Int) {
@@ -214,5 +210,14 @@ class Level extends MyWorld {
 		case Swap: return Swap;
 		case Move(dx, dy): return Move(-dx, -dy);
 		}
+	}
+
+	public function addUI() {
+		add(new UIButton(20, 20, UIButton.UNDO, "undo (Z)",
+		                 this.canUndo, this.undo));
+		add(new UIButton(40, 20, UIButton.REDO, "redo (Y)",
+		                 this.canRedo, this.redo));
+		add(new UIButton(60, 20, UIButton.RESTART, "restart (R)",
+		                 this.canUndo, this.reset));
 	}
 }

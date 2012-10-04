@@ -25,6 +25,8 @@ class MyWorld extends World {
 
 	public var readyToMove:Bool;
 
+	public var numFish:Int;
+
 	public function new () {
 		super();
 
@@ -35,6 +37,8 @@ class MyWorld extends World {
 
 		allowedChanges = 0;
 		frame = 0;
+
+		numFish = 0;
 	}
 
 	public function loadString (str:String) : Void {
@@ -162,10 +166,13 @@ class MyWorld extends World {
 		if (e == null)
 			return;
 
+		if (Std.is(e, Fish))
+			numFish++;
+
 		add(e);
 
 		// Select the first fish we add, to ensure there's always a fish
-		// selected.
+		// selected. Also select if it's upper-case.
 		if (~/[FM]/.match(c) || (~/[fm]/.match(c) && selected == null))
 			selected = cast e;
 	}
