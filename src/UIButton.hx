@@ -41,8 +41,6 @@ class UIButton extends Entity {
 	}
 
 	override public function update () {
-		cast(graphic,Spritemap).color = enabled() ? 0x000000 : 0x808080;
-
 		var oldMo = mouseOver;
 		mouseOver = collidePoint(x, y, Input.mouseX, Input.mouseY);
 
@@ -63,6 +61,20 @@ class UIButton extends Entity {
 			tween.active = false;
 			world.remove(tooltip);
 		}
+	}
+
+	override public function render () {
+		var col:Int;
+		if (! enabled())
+			col = 0x808080;
+		else if (mouseOver)
+			col = 0xFFFF00;
+		else
+			col = 0x000000;
+
+		cast(graphic, Spritemap).color = col;
+
+		super.render();
 	}
 
 	public function enabled () : Bool {
