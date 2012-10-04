@@ -23,6 +23,7 @@ class Level extends MyWorld {
 
 	public var moves:MoveList;
 	public var undoIndex:Int;
+	public var resetting:Bool;
 
 	public function new () {
 		super();
@@ -64,6 +65,13 @@ class Level extends MyWorld {
 			- (Input.check(Key.UP) ? 1 : 0);
 		if (dx != 0)
 			dy = 0;
+
+		if (resetting && readyToMove) {
+			Fish.moveTime /= 3;
+			undo();
+			Fish.moveTime *= 3;
+			resetting = canUndo();
+		}
 
 		if (readyToMove && selected != null) {
 			if (selected.loveCount == 0 && (dx != 0 || dy != 0))
@@ -191,7 +199,7 @@ class Level extends MyWorld {
 	}
 
 	public function reset () {
-		HXP.world = loadNew(levelNumber);
+		resetting = true;
 	}
 
 	public function nextLevel () {

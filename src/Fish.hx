@@ -11,6 +11,8 @@ class Fish extends Entity {
 	public static var UP:Int = 4;
 	public static var DOWN:Int = 8;
 
+	public static var moveTime:Float = 6;
+
 	public var gender(getGender, setGender):Bool; // Male is false, female true.
 	public var facing(getFacing, setFacing):Int;
 	public var image:Spritemap;
@@ -40,7 +42,7 @@ class Fish extends Entity {
 		loveCount = 0;
 	}
 
-	public function move (dx:Int, dy:Int) : Bool {
+	public function move (dx:Int, dy:Int, fast:Bool = false) : Bool {
 		facing = xy2dir(dx, dy);
 
 		dx *= 30;
@@ -50,7 +52,7 @@ class Fish extends Entity {
 			var complete = function () {
 				level.readyToMove = true;
 			};
-			HXP.tween(this, {x: x+dx, y: y+dy}, 6,
+			HXP.tween(this, {x: x+dx, y: y+dy}, moveTime,
 			          { complete: complete });
 			return true;
 		}
