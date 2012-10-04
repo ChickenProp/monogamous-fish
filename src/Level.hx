@@ -160,14 +160,13 @@ class Level extends MyWorld {
 	}
 
 	public function checkWin () : Bool {
-		var fish = [];
-		getClass(Fish, fish);
-		for (f in fish)
-			if (cast(f, Fish).loveCount != 1)
-				return false;
-
-		if (fish.length == 0) // no fish == final level, don't win
+		var fs = fishes();
+		if (fs.length == 0) // no fish == final level, don't win
 			return false;
+
+		for (f in fs)
+			if (f.loveCount != 1)
+				return false;
 
 		return true;
 	}
