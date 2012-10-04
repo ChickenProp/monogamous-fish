@@ -12,6 +12,7 @@ class Fish extends Entity {
 	public static var DOWN:Int = 8;
 
 	public static var moveTime:Float = 6;
+	public var moving:Bool;
 
 	public var gender(getGender, setGender):Bool; // Male is false, female true.
 	public var facing(getFacing, setFacing):Int;
@@ -49,7 +50,9 @@ class Fish extends Entity {
 		dy *= 30;
 		if (collide("tile", x + dx, y + dy) == null) {
 			level.readyToMove = false;
+			moving = true;
 			var complete = function () {
+				moving = false;
 				level.readyToMove = true;
 			};
 			HXP.tween(this, {x: x+dx, y: y+dy}, moveTime,
@@ -65,6 +68,12 @@ class Fish extends Entity {
 	}
 
 	public function findLove () {
+		if (moving) {
+			loveDirections = 0;
+			loveCount = 0;
+			return;
+		}
+
 		var newld = 0;
 		var newlc = 0;
 		var newdir = 0;
