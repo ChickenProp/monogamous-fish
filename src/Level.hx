@@ -31,16 +31,12 @@ class Level extends MyWorld {
 		undoIndex = -1;
 		readyToMove = true;
 
-		var self = this;
 		add(new UIButton(20, 20, UIButton.UNDO, "undo (Z)",
-		                 function () { return self.canUndo(); },
-		                 function () { self.undo(); }));
+		                 this.canUndo, this.undo));
 		add(new UIButton(40, 20, UIButton.REDO, "redo (Y)",
-		                 function () { return self.canRedo(); },
-		                 function () { self.redo(); }));
+		                 this.canRedo, this.redo));
 		add(new UIButton(60, 20, UIButton.RESTART, "restart (R)",
-		                 function () { return self.canUndo(); },
-		                 function () { self.reset(); }));
+		                 this.canUndo, this.reset));
 	}
 
 	public function load (n:Int) {
