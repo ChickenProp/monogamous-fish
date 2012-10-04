@@ -101,7 +101,7 @@ class Level extends MyWorld {
 				selNext();
 		}
 
-		if (checkWin())
+		if (checkWin() && readyToMove)
 			nextLevel();
 	}
 
