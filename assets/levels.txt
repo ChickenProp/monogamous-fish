@@ -10,7 +10,6 @@ eNpjYGD4powBuCgXSsMUUsAipIAulJumQIQqbGb5kuZUAPsdIlI=
 "press space to change sex
 eNpjYGL4powBuGCMNEwhBSxCCuhCabkKRKjKTSNGFTYbfTGFlEkUAgBr4SLY
 
-"N/P - next/prev level. Z/Y - undo/redo. R - reset.
 eNpjYGL4powBuCgWSsMUUkjLRRVKy1UgV5Uv5U4FAMZsJAQ=
 
 eNpjYGb4powBuGghpIAupJDmm6aAriqNCI1UcRcABk8iVw==
