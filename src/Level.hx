@@ -88,8 +88,11 @@ class Level extends MyWorld {
 			prevLevel();
 		if (Input.pressed(Key.R))
 			reset();
-		if (Input.pressed(Key.E))
-			HXP.world = new Editor();
+		if (Input.pressed(Key.E)) {
+			var ed = new Editor();
+			ed.loadTileString(tileString);
+			HXP.world = ed;
+		}
 		if (Input.pressed(Key.TAB)) {
 			if (Input.check(Key.SHIFT))
 				selPrev();

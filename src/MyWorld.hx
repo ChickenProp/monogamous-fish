@@ -26,6 +26,8 @@ class MyWorld extends World {
 	public var readyToMove:Bool;
 
 	public var numFish:Int;
+	public var tiles:Array<Array<Entity>>;
+	public var tileString:String;
 
 	public function new () {
 		super();
@@ -55,24 +57,28 @@ class MyWorld extends World {
 		if (allowedChanges > 0)
 			addChangeCount();
 
-		var tiles = ba.readUTF();
-		loadTileString(trimTileString(tiles));
+		tileString = ba.readUTF();
+		loadTileString(trimTileString(tileString));
 	}
 
 	public function loadTileString (str:String) : Void {
 		var lines = str.split("\n");
 		width = 0;
 		height = lines.length;
+		width = lines[0].length;
+		tiles = [];
+
 		var y = 0;
 		for (l in lines) {
 			var x = 0;
 			var chars = l.split("");
 			for (c in chars) {
-				addTileByChar(x, y, c);
+				if (y == 0)
+					tiles.push([]);
+
+				tiles[x].push(addTileByChar(x, y, c));
 				x++;
 			}
-			if (width < x)
-				width = x;
 			y++;
 		}
 	}
@@ -155,7 +161,7 @@ class MyWorld extends World {
 			return "";
 	}
 
-	public function addTileByChar(x:Int, y:Int, c:String) {
+	public function addTileByChar(x:Int, y:Int, c:String) : Entity {
 		var e:Entity = (switch (c.toLowerCase()) {
 		        case '#': cast(new Rock(x*30, y*30));
 		        case 'm': cast(new Fish(x*30, y*30, false));
@@ -164,7 +170,7 @@ class MyWorld extends World {
 		});
 
 		if (e == null)
-			return;
+			return null;
 
 		if (Std.is(e, Fish))
 			numFish++;
@@ -175,6 +181,8 @@ class MyWorld extends World {
 		// selected. Also select if it's upper-case.
 		if (~/[FM]/.match(c) || (~/[fm]/.match(c) && selected == null))
 			selected = cast e;
+
+		return e;
 	}
 
 	public function addChangeCount () : Void {

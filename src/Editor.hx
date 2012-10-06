@@ -11,24 +11,10 @@ class Editor extends MyWorld {
 	public var panel:Panel;
 	public var entToPlace:Entity;
 
-	public var tiles:Array<Array<Entity>>;
-
 	public function new () {
 		super();
-		tiles = [];
-		width = 18;
-		height = 13;
-		for (x in 0...width) {
-			tiles.push([]);
-			for (y in 0...height) {
-				var r = new Rock(30*x, 30*y);
-				tiles[x].push(r);
-				add(r);
-			}
-		}
 
 		addChangeCount();
-
 		panel = cast add(new Panel());
 	}
 
