@@ -1,5 +1,6 @@
 import com.haxepunk.HXP;
 import com.haxepunk.World;
+import com.haxepunk.Entity;
 import com.haxepunk.utils.Input;
 import com.haxepunk.utils.Key;
 import com.haxepunk.utils.Draw;
@@ -215,6 +216,19 @@ class Level extends MyWorld {
 		}
 	}
 
+	var rocksHidden:Bool;
+	override public function render () {
+		// render sometimes gets called before update (I thought always,
+		// but maybe not?), so we need this here. Can't just test for
+		// frame=0, because if update gets called first, we're on frame
+		// 1, so use a var to only call hideRocks once (it's slow).
+		if (!rocksHidden)
+			hideRocks();
+		rocksHidden = true;
+
+		super.render();
+	}
+
 	public function addUI() {
 		add(new UIButton(20, 20, UIButton.UNDO, "undo (Z)",
 		                 this.canUndo, this.undo));
@@ -222,5 +236,14 @@ class Level extends MyWorld {
 		                 this.canRedo, this.redo));
 		add(new UIButton(60, 20, UIButton.RESTART, "restart (R)",
 		                 this.canUndo, this.reset));
+	}
+
+	public function hideRocks () {
+		var rocks:Array<Entity> = [];
+		getClass(Rock, rocks);
+		for (r in rocks) {
+			if (!cast(r, Rock).shouldBeVisible())
+				r.visible = false;
+		}
 	}
 }

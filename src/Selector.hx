@@ -31,6 +31,8 @@ class Selector extends Entity {
 
 	override public function render () : Void {
 		// If this is in update, it seems to take effect one frame late.
+		// That's because Engine calls super.update() at the beginning,
+		// so this calls update before it's moved by Engine.
 		var e = collide("tile", x, y);
 		if (e != null && Std.is(e, Fish))
 			cast(graphic, Image).color = 0xFFFFFF;
