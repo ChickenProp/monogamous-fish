@@ -14,7 +14,6 @@ class UIButton extends Entity {
 	var clickFn:Void->Void;
 
 	var mouseOver:Bool;
-	var tween:MultiVarTween;
 
 	public function new (x:Float, y:Float, tile:Int, tooltip:String,
 	                     enable:Void->Bool, click:Void->Void)
@@ -32,16 +31,16 @@ class UIButton extends Entity {
 		centerOrigin();
 		type = "button";
 
-		this.tooltip = new Tooltip(tooltip);
+		this.tooltip = new Tooltip(this, tooltip);
 		enableFn = enable;
 		clickFn = click;
+	}
 
-		mouseOver = false;
-		tween = new MultiVarTween();
+	override public function added () {
+		world.add(tooltip);
 	}
 
 	override public function update () {
-		var oldMo = mouseOver;
 		mouseOver = collidePoint(x, y, Input.mouseX, Input.mouseY);
 
 		if (Input.mousePressed
@@ -50,16 +49,6 @@ class UIButton extends Entity {
 		    && enabled())
 		{
 			clickFn();
-		}
-
-		if (mouseOver && !oldMo) {
-			tween = HXP.tween(this, {}, 10,
-			                  { complete: this.addTooltip });
-		}
-
-		if (!mouseOver && oldMo) {
-			tween.active = false;
-			world.remove(tooltip);
 		}
 	}
 
@@ -79,11 +68,6 @@ class UIButton extends Entity {
 
 	public function enabled () : Bool {
 		return enableFn == null || enableFn();
-	}
-
-	public function addTooltip () {
-		tooltip.moveTo(Input.mouseX, Input.mouseY + 15);
-		world.add(tooltip);
 	}
 }
 

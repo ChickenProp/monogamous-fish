@@ -1,11 +1,23 @@
+import com.haxepunk.HXP;
 import com.haxepunk.Entity;
+import com.haxepunk.utils.Input;
 import com.haxepunk.graphics.Image;
 import com.haxepunk.graphics.Text;
 import com.haxepunk.graphics.Graphiclist;
+import com.haxepunk.tweens.misc.MultiVarTween;
 
 class Tooltip extends Entity {
-	public function new (text:String) {
+	var entity:Entity;
+	var mouseOver:Bool;
+	var tween:MultiVarTween;
+
+	public function new (ent:Entity, text:String) {
 		super();
+
+		entity = ent;
+		visible = false;
+		mouseOver = false;
+		tween = new MultiVarTween();
 
 		var gl = new Graphiclist();
 		gl.scrollX = gl.scrollY = 0;
@@ -15,5 +27,28 @@ class Tooltip extends Entity {
 		gl.add(bg);
 		gl.add(textG);
 		graphic = gl;
+	}
+
+	override public function update () {
+		super.update();
+
+		var oldMo = mouseOver;
+		mouseOver = entity.collidePoint(entity.x, entity.y,
+		                                Input.mouseX, Input.mouseY);
+
+		if (mouseOver && !oldMo) {
+			tween = HXP.tween(this, {}, 10,
+			                  { complete: this.show });
+		}
+
+		if (!mouseOver && oldMo) {
+			tween.active = false;
+			visible = false;
+		}
+	}
+
+	public function show () {
+		moveTo(Input.mouseX, Input.mouseY + 15);
+		visible = true;
 	}
 }
