@@ -156,8 +156,12 @@ class MyWorld extends World {
 		var swapFish = new Spritemap("gfx/tiles.png", 30, 30);
 		swapFish.frame = 8;
 		swapFish.scrollX = 0; swapFish.scrollY = 0;
-		swapFish.y = Main.kScreenHeight - 35;
-		addGraphic(swapFish).layer--;
+
+		var sfEnt = addGraphic(swapFish);
+		sfEnt.layer--;
+		sfEnt.width = sfEnt.height = 30;
+		sfEnt.y = Main.kScreenHeight - 35;
+		add(new Tooltip(sfEnt, "change sex (space)"));
 	}
 
 	public function setText (s:String) {

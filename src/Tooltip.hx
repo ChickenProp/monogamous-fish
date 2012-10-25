@@ -15,6 +15,9 @@ class Tooltip extends Entity {
 		super();
 
 		entity = ent;
+		// If ent has already been added, being on the same level will
+		// make the tooltip draw on top. It seems a reasonable default.
+		layer = ent.layer;
 		visible = false;
 		mouseOver = false;
 		tween = new MultiVarTween();
@@ -48,7 +51,8 @@ class Tooltip extends Entity {
 	}
 
 	public function show () {
-		moveTo(Input.mouseX, Input.mouseY + 15);
+		var offset = Main.kScreenHeight - Input.mouseY < 31 ? -15 : 15;
+		moveTo(Input.mouseX, Input.mouseY + offset);
 		visible = true;
 	}
 }
