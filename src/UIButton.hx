@@ -10,8 +10,6 @@ class UIButton extends Entity {
 	public static var RESTART:Int = 2;
 
 	var tooltip:Entity;
-	var enableFn:Void->Bool;
-	var clickFn:Void->Void;
 
 	var mouseOver:Bool;
 
@@ -32,8 +30,8 @@ class UIButton extends Entity {
 		type = "button";
 
 		this.tooltip = new Tooltip(this, tooltip);
-		enableFn = enable;
-		clickFn = click;
+		enabled = enable;
+		clicked = click;
 	}
 
 	override public function added () {
@@ -43,13 +41,8 @@ class UIButton extends Entity {
 	override public function update () {
 		mouseOver = collidePoint(x, y, Input.mouseX, Input.mouseY);
 
-		if (Input.mousePressed
-		    && mouseOver
-		    && clickFn != null
-		    && enabled())
-		{
-			clickFn();
-		}
+		if (Input.mousePressed && mouseOver && enabled())
+			clicked();
 	}
 
 	override public function render () {
@@ -66,9 +59,11 @@ class UIButton extends Entity {
 		super.render();
 	}
 
-	public function enabled () : Bool {
-		return enableFn == null || enableFn();
+	dynamic public function enabled () : Bool {
+		return true;
 	}
+
+	dynamic public function clicked () : Void {}
 }
 
 
