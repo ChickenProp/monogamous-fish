@@ -29,6 +29,8 @@ class MyWorld extends World {
 	public var tiles:Array<Array<Entity>>;
 	public var tileString:String;
 
+	public var swapFish:Entity;
+
 	public function new () {
 		super();
 
@@ -54,8 +56,9 @@ class MyWorld extends World {
 		ba.uncompress();
 		ba.readByte(); // version, currently ignored.
 		allowedChanges = ba.readByte();
-		if (allowedChanges > 0)
+		if (allowedChanges > 0) {
 			addChangeCount();
+		}
 
 		tileString = ba.readUTF();
 		loadTileString(tileString);
@@ -153,15 +156,14 @@ class MyWorld extends World {
 		changeCount.y = Main.kScreenHeight - 30;
 		addGraphic(changeCount).layer--;
 
-		var swapFish = new Spritemap("gfx/tiles.png", 30, 30);
-		swapFish.frame = 8;
-		swapFish.scrollX = 0; swapFish.scrollY = 0;
+		var sfg = new Spritemap("gfx/tiles.png", 30, 30);
+		sfg.frame = 8;
+		sfg.scrollX = 0; sfg.scrollY = 0;
 
-		var sfEnt = addGraphic(swapFish);
-		sfEnt.layer--;
-		sfEnt.width = sfEnt.height = 30;
-		sfEnt.y = Main.kScreenHeight - 35;
-		add(new Tooltip(sfEnt, "change sex (space)"));
+		swapFish = addGraphic(sfg);
+		swapFish.layer--;
+		swapFish.width = swapFish.height = 30;
+		swapFish.y = Main.kScreenHeight - 35;
 	}
 
 	public function setText (s:String) {

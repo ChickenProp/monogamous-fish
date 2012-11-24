@@ -243,6 +243,16 @@ class Level extends MyWorld {
 		add(UIButton.fromButtonsPng(60, 20, UIButton.RESTART,
 		                            "restart (R)",
 		                            this.undo, this.canUndo));
+
+		if (swapFish == null)
+			return;
+
+		add(new UIButton(swapFish, "change sex (space)",
+		                 function () {
+					 if (readyToMove && allowedChanges != 0)
+						 doMove(Swap);
+				 },
+		                 function () { return true; }));
 	}
 
 	public function hideRocks () {
