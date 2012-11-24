@@ -236,12 +236,13 @@ class Level extends MyWorld {
 	}
 
 	public function addUI() {
-		add(new UIButton(20, 20, UIButton.UNDO, "undo (Z)",
-		                 this.canUndo, this.undo));
-		add(new UIButton(40, 20, UIButton.REDO, "redo (Y)",
-		                 this.canRedo, this.redo));
-		add(new UIButton(60, 20, UIButton.RESTART, "restart (R)",
-		                 this.canUndo, this.reset));
+		add(UIButton.fromButtonsPng(20, 20, UIButton.UNDO, "undo (Z)",
+		                            this.undo, this.canUndo));
+		add(UIButton.fromButtonsPng(40, 20, UIButton.REDO, "redo (Y)",
+		                            this.redo, this.canRedo));
+		add(UIButton.fromButtonsPng(60, 20, UIButton.RESTART,
+		                            "restart (R)",
+		                            this.undo, this.canUndo));
 	}
 
 	public function hideRocks () {
