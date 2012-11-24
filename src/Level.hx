@@ -26,12 +26,15 @@ class Level extends MyWorld {
 	public var undoIndex:Int;
 	public var resetting:Bool;
 
+	public var lastUndoSwap:Int;
+
 	public function new () {
 		super();
 
 		moves = [];
 		undoIndex = -1;
 		readyToMove = true;
+		lastUndoSwap = 0;
 	}
 
 	public function load (n:Int) {
@@ -75,7 +78,9 @@ class Level extends MyWorld {
 				doMove(Move(dx, dy));
 			else if (Input.pressed(Key.SPACE) && allowedChanges !=0)
 				doMove(Swap);
-			else if (Input.check(Key.Z))
+			else if (Input.pressed(Key.Z))
+				undo();
+			else if (Input.check(Key.Z) && lastUndoSwap < frame-10)
 				undo();
 			else if (Input.check(Key.Y))
 				redo();
@@ -130,6 +135,7 @@ class Level extends MyWorld {
 		case Swap:
 			f.gender = !f.gender;
 			allowedChanges++;
+			lastUndoSwap = frame;
 		case Move(dx, dy):
 			selected.move(-dx, -dy);
 		}
