@@ -242,7 +242,7 @@ class Level extends MyWorld {
 		                            this.redo, this.canRedo));
 		add(UIButton.fromButtonsPng(60, 20, UIButton.RESTART,
 		                            "restart (R)",
-		                            this.undo, this.canUndo));
+		                            this.reset, this.canUndo));
 
 		if (swapFish == null)
 			return;

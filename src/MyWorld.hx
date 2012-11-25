@@ -154,6 +154,7 @@ class MyWorld extends World {
 		changeCount.scrollX = changeCount.scrollY = 0;
 		changeCount.x = 30;
 		changeCount.y = Main.kScreenHeight - 30;
+		changeCount.size = 24;
 		addGraphic(changeCount).layer--;
 
 		var sfg = new Spritemap("gfx/tiles.png", 30, 30);
@@ -167,8 +168,8 @@ class MyWorld extends World {
 	}
 
 	public function setText (s:String) {
-		text = new Text(s, 320, 460);
-		text.color = 0x000000;
+		text = new Text(s, 320, 460, 0, 0,
+		                { color: 0x000000, size: 24 });
 		text.centerOO();
 		text.scrollX = text.scrollY = 0;
 		addGraphic(text).layer--;

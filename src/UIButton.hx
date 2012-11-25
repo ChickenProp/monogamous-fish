@@ -16,7 +16,7 @@ class UIButton extends Entity {
 	var mouseOver:Bool;
 
 	public function new (entity:Entity, tooltip:String, click:Void->Void,
-	                     enable:Void->Bool, ?hover:Bool->Void)
+	                     ?enable:Void->Bool, ?hover:Bool->Void)
 	{
 		super();
 		this.entity = entity;
@@ -24,12 +24,13 @@ class UIButton extends Entity {
 		needToAddEnt = false;
 
 		this.hover = hover;
-		this.enabled = enable;
+		if (enable != null)
+			this.enabled = enable;
 		this.clicked = click;
 	}
 
 	public static function fromButtonsPng (x:Float, y:Float, tile:Int,
-	                    tooltip:String, click:Void->Void, enable:Void->Bool)
+	                   tooltip:String, click:Void->Void, ?enable:Void->Bool)
 	{
 		var e = new Entity();
 		e.x = x;

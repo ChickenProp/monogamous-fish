@@ -16,6 +16,23 @@ class Editor extends MyWorld {
 
 		addChangeCount();
 		panel = cast add(new Panel());
+		add(UIButton.fromButtonsPng(15, Main.kScreenHeight - 51,
+		                            3, "Increase (+)",
+		                            function () { allowedChanges++; }));
+		add(UIButton.fromButtonsPng(35, Main.kScreenHeight - 51,
+		                            4, "Decrease (-)",
+		                            function () {
+						    allowedChanges--;
+						    if (allowedChanges < 0)
+							    allowedChanges = 0;
+					    }));
+
+		// We can't read the clipboard from outside a PASTE event, so
+		// that doesn't work. Having copy without paste seems silly.
+		//add(UIButton.fromButtonsPng(15, 15, 5, "Copy",
+		//                            function(){Main.copyHandler();}));
+		//add(UIButton.fromButtonsPng(35, 15, 6, "Paste",
+		//                           function(){Main.pasteHandler();}));
 	}
 
 	var hiddenTile:Entity;
