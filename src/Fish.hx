@@ -57,6 +57,7 @@ class Fish extends Entity {
 			};
 			HXP.tween(this, {x: x+dx, y: y+dy}, moveTime,
 			          { complete: complete });
+			Audio.playBubbles();
 			return true;
 		}
 		else
@@ -81,6 +82,8 @@ class Fish extends Entity {
 		var check = function (dir:Int) : Void {
 			var e = collide("tile", x + dir2x(dir), y + dir2y(dir));
 			if (loves(e)) {
+				if (loveDirections & dir == 0)
+					Audio.playKiss();
 				newld |= dir;
 				newlc++;
 				newdir = dir;
