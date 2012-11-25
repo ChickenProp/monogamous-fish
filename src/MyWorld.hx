@@ -180,12 +180,26 @@ class MyWorld extends World {
 		HXP.camera.y = 15 * height - Main.halfHeight - 15;
 	}
 
+	var ccColI:Int;
 	override public function update () : Void {
 		super.update();
 		heart.update();
 
-		if (changeCount != null)
-			changeCount.text = Std.string(allowedChanges);
+		if (changeCount != null) {
+			// We can't tween because .color uses a setter. Also I
+			// don't know what the easer function would look like.
+			var colors = [ 0x000000, 0x999900, 0xCCCC00, 0xDDDD00,
+			               0xEEEE00, 0xFFFF00, 0xFFFF00, 0xFFFF00,
+			               0xFFFF00, 0xFFFF00, 0xFFFF00, 0xFFFF00 ];
+			var nt = Std.string(allowedChanges);
+			if (nt != changeCount.text) {
+				changeCount.text = nt;
+				ccColI = colors.length - 1;
+				changeCount.color = colors[ccColI];
+			}
+			else if (ccColI >= 0)
+				changeCount.color = colors[ccColI--];
+		}
 
 		if (Input.pressed(Key.F5))
 			HXP.console.enable();
@@ -203,6 +217,11 @@ class MyWorld extends World {
 	}
 
 	override public function render () : Void {
+		// After we swap worlds, render gets called on the new world
+		// before update does. Soluion: if we've never updated, do so.
+		if (frame == 0)
+			update();
+
 		adjustCamera();
 		super.render();
 

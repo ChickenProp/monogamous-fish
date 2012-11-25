@@ -37,6 +37,10 @@ class Level extends MyWorld {
 		lastUndoSwap = 0;
 	}
 
+	override public function begin () {
+		hideRocks();
+	}
+
 	public function load (n:Int) {
 		var levels = nme.Assets.getBytes("levels.txt").toString().split("\n\n");
 
@@ -220,19 +224,6 @@ class Level extends MyWorld {
 		case Swap: return Swap;
 		case Move(dx, dy): return Move(-dx, -dy);
 		}
-	}
-
-	var rocksHidden:Bool;
-	override public function render () {
-		// render sometimes gets called before update (I thought always,
-		// but maybe not?), so we need this here. Can't just test for
-		// frame=0, because if update gets called first, we're on frame
-		// 1, so use a var to only call hideRocks once (it's slow).
-		if (!rocksHidden)
-			hideRocks();
-		rocksHidden = true;
-
-		super.render();
 	}
 
 	public function addUI() {
