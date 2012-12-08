@@ -155,14 +155,13 @@ class MyWorld extends World {
 		changeCount.x = 30;
 		changeCount.y = Main.kScreenHeight - 30;
 		changeCount.size = 24;
-		addGraphic(changeCount).layer--;
+		addGraphic(changeCount);
 
 		var sfg = new Spritemap("gfx/tiles.png", 30, 30);
-		sfg.frame = 8;
+		sfg.frame = 4;
 		sfg.scrollX = 0; sfg.scrollY = 0;
 
 		swapFish = addGraphic(sfg);
-		swapFish.layer--;
 		swapFish.width = swapFish.height = 30;
 		swapFish.y = Main.kScreenHeight - 35;
 	}

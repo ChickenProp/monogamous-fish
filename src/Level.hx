@@ -240,10 +240,19 @@ class Level extends MyWorld {
 
 		add(new UIButton(swapFish, "change sex (space)",
 		                 function () {
-					 if (readyToMove && allowedChanges != 0)
+					 if (readyToMove)
 						 doMove(Swap);
 				 },
-		                 function () { return true; }));
+		                 function () { return allowedChanges != 0; },
+		                 function (h) {
+					 var s = cast(swapFish.graphic, Spritemap);
+					 if (allowedChanges == 0)
+						 s.frame = 14;
+					 else if (h)
+						 s.frame = 9;
+					 else
+						 s.frame = 4;
+				 }));
 	}
 
 	public function hideRocks () {

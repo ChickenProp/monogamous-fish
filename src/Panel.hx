@@ -28,7 +28,7 @@ class Panel extends Entity {
 		addButton(1, "rock");
 		addButton(2, "male");
 		addButton(3, "female");
-		addButton(4, "select");
+		addButton(5, "select");
 		buttons[4].replace = false;
 		selectButton(buttons[0]);
 
