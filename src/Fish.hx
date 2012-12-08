@@ -161,6 +161,8 @@ class Fish extends Entity {
 	function getGender () : Bool { return _gender; }
 	function setGender (g:Bool) : Bool {
 		image.frame = g ? 3 : 2;
+		if (_gender != g)
+			Audio.playChange();
 		_gender = g;
 		return g;
 	}
