@@ -27,6 +27,7 @@ class Level extends MyWorld {
 	public var resetting:Bool;
 
 	public var lastUndoSwap:Int;
+	public var levelTransTimer:Float;
 
 	public function new () {
 		super();
@@ -66,6 +67,11 @@ class Level extends MyWorld {
 	}
 
 	override public function update () {
+		if (levelTransTimer > 0) {
+			super.update();
+			return;
+		}
+
 		var dx = (Input.check(Key.RIGHT) ? 1 : 0)
 			- (Input.check(Key.LEFT) ? 1 : 0);
 		var dy = (Input.check(Key.DOWN) ? 1 : 0)
@@ -113,8 +119,11 @@ class Level extends MyWorld {
 				selNext();
 		}
 
-		if (checkWin() && readyToMove)
-			nextLevel();
+		if (checkWin() && readyToMove) {
+			var self = this;
+			HXP.tween(this, {levelTransTimer: 1}, 10,
+			          {complete: function() { self.nextLevel(); }});
+		}
 	}
 
 	public function doMove (m:FishMove) : Void {

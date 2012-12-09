@@ -23,6 +23,10 @@ class Audio {
 		new Sfx("music/creek.mp3").loop();
 	}
 	public static function playKiss() : Void {
+		var w = cast(HXP.world, MyWorld);
+		if (Std.is(w, Editor) || w.frame == 0)
+			return;
+
 		if (canPlayKiss == 1) {
 			kiss.play();
 			canPlayKiss = 0;
