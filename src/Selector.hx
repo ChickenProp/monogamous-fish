@@ -10,7 +10,7 @@ class Selector extends Entity {
 		this.x = x;
 		this.y = y;
 		graphic = new Spritemap("gfx/tiles.png", 30, 30);
-		cast(graphic, Spritemap).frame = 4;
+		cast(graphic, Spritemap).frame = 5;
 		cast(graphic, Image).centerOO();
 		width = 30;
 		height = 30;
