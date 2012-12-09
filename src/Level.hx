@@ -239,13 +239,21 @@ class Level extends MyWorld {
 	}
 
 	public function addUI() {
+		// We don't want the undo/redo/restart buttons to do anything if
+		// we're not ready to move, because that can mess up game
+		// state. But we don't want to make them explicitly disabled,
+		// because that's ugly. So wrap the functions in a "only do
+		// something if we're ready to move" decorator.
+		var w = function (f) {
+			return function () { if (readyToMove) f(); }
+		};
 		add(UIButton.fromButtonsPng(20, 20, UIButton.UNDO, "undo (Z)",
-		                            this.undo, this.canUndo));
+		                            w(this.undo), this.canUndo));
 		add(UIButton.fromButtonsPng(40, 20, UIButton.REDO, "redo (Y)",
-		                            this.redo, this.canRedo));
+		                            w(this.redo), this.canRedo));
 		add(UIButton.fromButtonsPng(60, 20, UIButton.RESTART,
 		                            "restart (R)",
-		                            this.reset, this.canUndo));
+		                            w(this.reset), this.canUndo));
 
 		if (swapFish == null)
 			return;
