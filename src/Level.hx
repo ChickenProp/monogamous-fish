@@ -119,7 +119,8 @@ class Level extends MyWorld {
 				selNext();
 		}
 
-		if (checkWin() && readyToMove) {
+		// If levelNumber is -1, we came from the editor, don't leave.
+		if (checkWin() && readyToMove && levelNumber != -1) {
 			var self = this;
 			HXP.tween(this, {levelTransTimer: 1}, 10,
 			          {complete: function() { self.nextLevel(); }});

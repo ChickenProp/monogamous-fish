@@ -78,6 +78,7 @@ class Editor extends MyWorld {
 		if (Input.pressed(Key.E)) {
 			var lvl = new Level();
 			lvl.loadString(worldToStr());
+			lvl.levelNumber = -1;
 			HXP.world = lvl;
 		}
 	}
