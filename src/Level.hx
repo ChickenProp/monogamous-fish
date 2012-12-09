@@ -51,7 +51,10 @@ class Level extends MyWorld {
 		levelNumber = n;
 
 		loadString(levels[n]);
+	}
 
+	override public function loadString(str:String) {
+		super.loadString(str);
 		if (numFish != 0)
 			addUI();
 	}
