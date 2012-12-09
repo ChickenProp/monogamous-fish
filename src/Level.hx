@@ -255,12 +255,32 @@ class Level extends MyWorld {
 				 }));
 	}
 
+	// We do this in hideRocks now.
+	override public function adjustCamera() {}
+
 	public function hideRocks () {
+		var left, right, top, bottom;
+		left = top = Math.POSITIVE_INFINITY;
+		right = bottom = Math.NEGATIVE_INFINITY;
+
 		var rocks:Array<Entity> = [];
 		getClass(Rock, rocks);
-		for (r in rocks) {
-			if (!cast(r, Rock).shouldBeVisible())
+		for (re in rocks) {
+			var r = cast(re, Rock);
+			if (! r.shouldBeVisible())
 				r.visible = false;
+			else {
+				left = Math.min(r.x, left);
+				right = Math.max(r.x+30, right);
+				top = Math.min(r.y, top);
+				bottom = Math.max(r.y+30, bottom);
+			}
 		}
+
+		var width = (right - left);
+		var height = (bottom - top);
+
+		HXP.camera.x = (left + width/2) - Main.halfWidth;
+		HXP.camera.y = (top + height/2) - Main.halfHeight;
 	}
 }
