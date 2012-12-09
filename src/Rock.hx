@@ -10,7 +10,7 @@ class Rock extends Entity {
 		this.x = x;
 		this.y = y;
 		graphic = new Spritemap("gfx/tiles.png", 30, 30);
-		cast(graphic, Spritemap).frame = 1;
+		cast(graphic, Spritemap).frame = HXP.choose([1,6,11,16]);
 		cast(graphic, Image).centerOO();
 		width = 30;
 		height = 30;
