@@ -283,7 +283,7 @@ class Level extends MyWorld {
 		var width = (right - left);
 		var height = (bottom - top);
 
-		HXP.camera.x = (left + width/2) - Main.halfWidth;
-		HXP.camera.y = (top + height/2) - Main.halfHeight;
+		HXP.camera.x = (left + width/2) - Main.halfWidth - 15;
+		HXP.camera.y = (top + height/2) - Main.halfHeight - 15;
 	}
 }
