@@ -193,8 +193,10 @@ class MyWorld extends World {
 			var nt = Std.string(allowedChanges);
 			if (nt != changeCount.text) {
 				changeCount.text = nt;
-				ccColI = colors.length - 1;
-				changeCount.color = colors[ccColI];
+				if (frame != 0) {
+					ccColI = colors.length - 1;
+					changeCount.color = colors[ccColI];
+				}
 			}
 			else if (ccColI >= 0)
 				changeCount.color = colors[ccColI--];
